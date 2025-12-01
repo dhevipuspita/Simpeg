@@ -12,12 +12,19 @@ class Permission extends Model
     protected $table = 'permissions';
     protected $primaryKey = "permissionId";
     protected $fillable = [
+        "tglSurat",
         "santriId",
-        "description",
-        "file",
+        "nik",
+        "npa",
+        "ttl",
+        "alamat",
+        "jenjang",
+        "jabatan",
+        "tglMulai",
+        "tglAkhir",
+        "lamaCuti",
+        "alasan",
         "isComback",
-        "tglKeluar",
-        "tglKembali",
     ];
 
     public function santri(): BelongsTo

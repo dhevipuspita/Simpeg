@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Data Perizinan')
+@section('title', 'Data Perizinan Cuti')
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4">Data Perizinan</h4>
+        <h4 class="fw-bold py-3 mb-4">Data Perizinan Cuti</h4>
 
         <div class="d-block">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
@@ -89,13 +89,19 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Alasan Perizinan</th>
-                        <th>Nama Santri</th>
-                        <th>Tanggal Keluar</th>
-                        <th>Tanggal Kembali</th>
+                        <th>Tanggal Surat Permohonan Cuti</th>
+                        <th>Nama Lengkap</th>
+                        <th>NIK</th>
+                        <th>NPA</th>
+                        <th>Tempat, Tanggal Lahir</th>
+                        <th>Alamat</th>
+                        <th>Jenjang</th>
+                        <th>Jabatan</th>
+                        <th>Tanggal Mulai</th>
+                        <th>Tanggal Berakhir</th>
+                        <th>Lama Cuti</th>
+                        <th>Alasan Cuti</th>
                         <th>Status</th>
-                        <th>Bukti Pendukung</th>
-                        <th>Pengurus</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -103,12 +109,14 @@
                     @foreach ($permissions as $key => $p)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td style="world-wrap:break-world;">{{ $p->description }}</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglSurat)->locale('id-ID')->translatedFormat('d F Y') }} </td>
+                            <td>{{ $p->santri->pengurus->name }}</td>
                             <td style="world-wrap:break-world;">{{ $p->santri->name }}</td>
-                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglKeluar)->locale('id-ID')->translatedFormat('d F Y') }}
-                            </td>
-                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglKembali)->locale('id-ID')->translatedFormat('d F Y') }}
-                            </td>
+                            <td style="world-wrap:break-world;">{{ $p->nik }}</td>
+                            <td style="world-wrap:break-world;">{{ $p->npa }}</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->ttl)->locale('id-ID')->translatedFormat('d F Y') }} </td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglKeluar)->locale('id-ID')->translatedFormat('d F Y') }} </td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglKembali)->locale('id-ID')->translatedFormat('d F Y') }} </td>
                             <td>
                                 @if ($p->isComback)
                                     <span class="badge rounded-pill bg-success">Sudah Kembali</span>
@@ -124,7 +132,7 @@
                                     -
                                 @endif
                             </td>
-                            <td>{{ $p->santri->pengurus->name }}</td>
+                            <td style="world-wrap:break-world;">{{ $p->description }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"

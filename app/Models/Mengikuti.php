@@ -22,9 +22,4 @@ class Mengikuti extends Model
     {
         return $this->belongsTo(Santri::class, 'santriId', 'santriId');
     }
-
-    public function matpel(): BelongsTo
-    {
-        return $this->belongsTo(Matpel::class, 'matpelId', 'matpelId');
-    }
 }

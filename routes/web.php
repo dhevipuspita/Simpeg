@@ -9,12 +9,13 @@ use App\Http\Controllers\MadinController;
 use App\Http\Controllers\MandiriController;
 use App\Http\Controllers\MatpelController;
 use App\Http\Controllers\PengurusController;
+use App\Http\Controllers\PerizinanController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RekapAbsensiController;
 use App\Http\Controllers\RekapIzinController;
 use App\Http\Controllers\RekapMandiriController;
 use App\Http\Controllers\SantriController;
 use App\Http\Controllers\SekolahController;
+use App\Http\Controllers\StaffController;
 use App\Http\Controllers\SubmissionController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,29 +71,20 @@ Route::prefix("/")->middleware('auth')->group(function () {
     });
 
     Route::prefix("perizinan")->middleware("role:Admin,Pengurus")->group(function () {
-        Route::get("/", [SubmissionController::class, 'index'])->name('perizinan.index');
-        Route::post("/", [SubmissionController::class, 'store'])->name('perizinan.store');
-        Route::put("/update-status/{id}", [SubmissionController::class, 'updateStatus'])->name('perizinan.updateStatus');
-        Route::put("/{id}", [SubmissionController::class, 'update'])->name('perizinan.update');
-        Route::delete("/{id}", [SubmissionController::class, 'destroy'])->name('perizinan.destroy');
+        Route::get("/", [PerizinanController::class, 'index'])->name('perizinan.index');
+        Route::post("/", [PerizinanController::class, 'store'])->name('perizinan.store');
+        Route::put("/update-status/{id}", [PerizinanController::class, 'updateStatus'])->name('perizinan.updateStatus');
+        Route::put("/{id}", [PerizinanController::class, 'update'])->name('perizinan.update');
+        Route::delete("/{id}", [PerizinanController::class, 'destroy'])->name('perizinan.destroy');
     });
 
-    Route::get("perizinan/check/{id}", [SubmissionController::class, 'check'])->name('perizinan.check');
+    Route::get("perizinan/check/{id}", [PerizinanController::class, 'check'])->name('perizinan.check');
 
     /**
      * =======================================================================================================
      * Route to the Rekap page
      * =======================================================================================================
      */
-    Route::prefix("rekap-absensi")->middleware("role:Admin,Guru,Wali Santri")->group(function () {
-        Route::get("/", [RekapAbsensiController::class, 'index'])->name('rekapAbsensi.index');
-        Route::post("/export", [RekapAbsensiController::class, 'export'])->name('rekapAbsensi.export');
-    });
-
-    Route::prefix("rekap-mandiri")->middleware("role:Admin,Pengurus,Wali Santri")->group(function () {
-        Route::get("/", [RekapMandiriController::class, 'index'])->name('rekapMandiri.index');
-        Route::post("/export", [RekapMandiriController::class, 'export'])->name('rekapMandiri.export');
-    });
 
     Route::prefix("rekap-perizinan")->middleware("role:Admin,Pengurus,Wali Santri")->group(function () {
         Route::get("/", [RekapIzinController::class, 'index'])->name('rekapPerizinan.index');
@@ -122,6 +114,15 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::delete("/{id}", [PengurusController::class, 'destroy'])->name('pengurus.destroy');
     });
 
+    Route::prefix("staff")->middleware('role:Admin')->group(function () {
+        Route::get('/', [StaffController::class, 'index'])->name('staff.index');
+        Route::get("/template", [StaffController::class, 'template'])->name('staff.template');
+        Route::post('/', [StaffController::class, 'store'])->name('staff.store');
+        Route::post("/import", [StaffController::class, 'import'])->name('staff.import');
+        Route::put("/{id}", [StaffController::class, 'update'])->name('staff.update');
+        Route::delete("/{id}", [StaffController::class, 'destroy'])->name('staff.destroy');
+    });
+    
     Route::prefix("santri")->middleware('role:Admin')->group(function () {
         Route::get('/', [SantriController::class, 'index'])->name('santri.index');
         Route::get("/template", [SantriController::class, 'template'])->name('santri.template');
@@ -129,25 +130,6 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::post("/import", [SantriController::class, 'import'])->name('santri.import');
         Route::put("/{id}", [SantriController::class, 'update'])->name('santri.update');
         Route::delete("/{id}", [SantriController::class, 'destroy'])->name('santri.destroy');
-    });
-
-    Route::prefix("matpel")->middleware("role:Admin")->group(function () {
-        Route::get("/", [MatpelController::class, 'index'])->name('matpel.index');
-        Route::get("/template", [MatpelController::class, 'template'])->name('matpel.template');
-        Route::post("/", [MatpelController::class, 'store'])->name('matpel.store');
-        Route::post("/import", [MatpelController::class, 'import'])->name('matpel.import');
-        Route::put("/{id}", [MatpelController::class, 'update'])->name('matpel.update');
-        Route::delete("/{id}", [MatpelController::class, 'destroy'])->name('matpel.destroy');
-    });
-
-    Route::prefix("input-matpel-santri")->middleware("role:Admin")->group(function () {
-        Route::get("/", [InputMatpelSantriController::class, 'index'])->name('inputMatpelSantri.index');
-        Route::get("/template", [InputMatpelSantriController::class, 'template'])->name('inputMatpelSantri.template');
-        Route::post("/import", [InputMatpelSantriController::class, 'import'])->name('inputMatpelSantri.import');
-        Route::post("/export", [InputMatpelSantriController::class, 'export'])->name('inputMatpelSantri.export');
-        Route::post("/", [InputMatpelSantriController::class, 'store'])->name('inputMatpelSantri.store');
-        Route::put("/{id}", [InputMatpelSantriController::class, 'update'])->name('inputMatpelSantri.update');
-        Route::delete("/{id}", [InputMatpelSantriController::class, 'destroy'])->name('inputMatpelSantri.destroy');
     });
 
     Route::prefix("kelas")->middleware("role:Admin")->group(function () {

@@ -20,7 +20,7 @@ class KelasController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
+            $request->validated([
                 'name' => 'required',
             ]);
 

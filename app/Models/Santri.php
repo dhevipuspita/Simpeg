@@ -39,9 +39,4 @@ class Santri extends Model
     {
         return $this->hasMany(Permission::class, "santriId", "santriId");
     }
-
-    public function absensis(): HasMany
-    {
-        return $this->hasMany(Absensi::class, "santriId", "santriId");
-    }
 }
