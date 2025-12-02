@@ -12,8 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('staff', function (Blueprint $table) {
-            $table->id();
+            $table->id('staffId'); // Primary Key
+
+            $table->string('name');
+            $table->string('birthPlace')->nullable();
+            $table->date('birthDate')->nullable();
+            $table->string('nik')->nullable();
+            $table->string('noHp')->nullable();
+
+            $table->string('statusPerkawinan')->nullable();
+            $table->string('suami_istri')->nullable();
+
+            $table->text('alamat')->nullable();
+            $table->string('email')->nullable();
+
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 
