@@ -7,7 +7,6 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\PersistRelations;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithSkipDuplicates;
 use Maatwebsite\Excel\Concerns\WithUpsertColumns;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -124,10 +123,6 @@ class ModelManager
                          );
 
                          return;
-                     } elseif ($import instanceof WithSkipDuplicates) {
-                         $model::query()->insertOrIgnore($models->toArray());
-
-                         return;
                      }
 
                      $model::query()->insert($models->toArray());
@@ -153,10 +148,6 @@ class ModelManager
                                 $import->uniqueBy(),
                                 $import instanceof WithUpsertColumns ? $import->upsertColumns() : null
                             );
-
-                            return;
-                        } elseif ($import instanceof WithSkipDuplicates) {
-                            $model::query()->insertOrIgnore([$model->getAttributes()]);
 
                             return;
                         }

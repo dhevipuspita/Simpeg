@@ -1,0 +1,246 @@
+@extends('layouts.app')
+
+@section('title', 'Data Induk')
+
+@section('content')
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">Data Induk</h4>
+
+    <div class="d-block mb-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">
+            Tambah
+        </button>
+    </div>
+
+    {{-- Modal Tambah --}}
+    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('data-induk.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahModalLabel">Tambah Data Induk</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">No</label>
+                                <input type="number" name="no" class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Mulai Bertugas</label>
+                                <input type="date" name="mulai_bertugas" class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">NPA</label>
+                                <input type="text" name="npa" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama</label>
+                                <input type="text" name="nama" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Jenjang Jabatan</label>
+                                <input type="text" name="jenjang_jabatan" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Gol</label>
+                                <input type="text" name="gol" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" name="status">
+                                    <option value="" hidden>Pilih Status</option>
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="Tidak Aktif">Tidak Aktif</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Tabel --}}
+    <div class="table-responsive">
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Mulai Bertugas</th>
+                    <th>NPA</th>
+                    <th>Nama</th>
+                    <th>Jenjang Jabatan</th>
+                    <th>Gol</th>
+                    <th>Status</th>
+                    <th>Status Pegawai</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach ($dataInduk as $d)
+
+                {{-- ROW merah jika resign --}}
+                <tr class="{{ $d->status_pegawai == 'resign' ? 'table-danger' : '' }}">
+
+                    <td>{{ $d->no }}</td>
+                    <td>{{ $d->mulai_bertugas }}</td>
+                    <td>{{ $d->npa }}</td>
+                    <td>{{ $d->nama }}</td>
+                    <td>{{ $d->jenjang_jabatan ?? '-' }}</td>
+                    <td>{{ $d->gol ?? '-' }}</td>
+                    <td>{{ $d->status ?? '-' }}</td>
+
+                    <td>
+                        @if ($d->status_pegawai == 'resign')
+                            <span class="badge bg-danger">Resign</span>
+                        @else
+                            <span class="badge bg-success">Aktif</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="ti ti-dots-vertical"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                {{-- Edit --}}
+                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal{{ $d->id }}">
+                                    <i class="ti ti-pencil me-1"></i>Edit
+                                </button>
+
+                                {{-- Resign --}}
+                                <a class="dropdown-item" href="{{ route('resign.create', ['data_induk_id' => $d->id]) }}">
+                                    <i class="ti ti-user-x me-1"></i>Resign
+                                </a>
+
+                                {{-- Hapus --}}
+                                <button class="dropdown-item delete-data-induk" data-id="{{ $d->id }}">
+                                    <i class="ti ti-trash me-1"></i>Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                {{-- Modal Update --}}
+                <div class="modal fade" id="updateModal{{ $d->id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <form method="POST" action="{{ route('data-induk.update', $d->id) }}">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Update Data Induk</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label>No</label>
+                                            <input type="number" name="no" class="form-control" value="{{ $d->no }}">
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <label>Mulai Bertugas</label>
+                                            <input type="date" name="mulai_bertugas" class="form-control" value="{{ $d->mulai_bertugas }}">
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <label>NPA</label>
+                                            <input type="text" name="npa" class="form-control" value="{{ $d->npa }}">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Nama</label>
+                                            <input type="text" name="nama" class="form-control" value="{{ $d->nama }}" required>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Jenjang Jabatan</label>
+                                            <input type="text" name="jenjang_jabatan" class="form-control" value="{{ $d->jenjang_jabatan }}">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Gol</label>
+                                            <input type="text" name="gol" class="form-control" value="{{ $d->gol }}">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Status</label>
+                                            <select name="status" class="form-select">
+                                                <option value="Aktif" {{ $d->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                                <option value="Tidak Aktif" {{ $d->status == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                    <button class="btn btn-primary">Simpan</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+$(document).on('click', '.delete-data-induk', function() {
+    let id = $(this).data('id');
+
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: "Data ini tidak dapat dipulihkan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post(`/data-induk/${id}`, {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            }, function(response) {
+                Swal.fire('Terhapus!', response.message, 'success');
+                location.reload();
+            }).fail(function(xhr) {
+                Swal.fire('Gagal!', xhr.responseJSON.message, 'error');
+            });
+        }
+    });
+});
+</script>
+@endpush

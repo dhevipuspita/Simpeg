@@ -38,8 +38,8 @@
                             <div>Data Diri Staff</div>
                         </a>
                     </li>
-                    <li class="menu-item">
-                        <a class="menu-link">
+                    <li class="menu-item {{ Route::currentRouteName() == 'data-induk.index' ? 'active' : '' }}">
+                        <a href="{{ route('data-induk.index') }}" class="menu-link">
                             <div>Data Induk Staff</div>
                         </a>
                     </li>
@@ -86,12 +86,12 @@
                 </a>
             </li>
         @endif
-        <li class="menu-item">
-            <a class="menu-link">
-                <i class="menu-icon tf-icons ti ti-logout"></i>
-                <div>Resign</div>
-            </a>
-        </li>
+      <li class="menu-item {{ Route::currentRouteName() == 'resign.index' ? 'active' : '' }}">
+    <a href="{{ route('resign.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-user-x"></i>
+        <div>Resign</div>
+    </a>
+</li>
         <li class="menu-item {{ Route::currentRouteName() == 'profile.index' ? 'active' : '' }}">
             <a href="{{ route('profile.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-user"></i>
