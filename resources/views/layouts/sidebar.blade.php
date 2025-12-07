@@ -53,6 +53,11 @@
                             <div>Jenis Golongan Pegawai</div>
                         </a>
                     </li>
+                    <li class="menu-item {{ Route::currentRouteName() == 'jenjang.index' ? 'active' : '' }}">
+                        <a href="{{ route('jenjang.index') }}" class="menu-link">
+                            <div>Jenjang</div>
+                        </a>
+                    </li>
                     <li class="menu-item {{ Route::currentRouteName() == 'reset.index' ? 'active' : '' }}">
                         <a href="{{ route('reset.index') }}" class="menu-link">
                             <div>Reset Password</div>

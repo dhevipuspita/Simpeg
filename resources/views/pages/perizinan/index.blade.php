@@ -8,7 +8,7 @@
 
         <div class="d-block mb-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">
-                Tambah
+                Tambah Manual
             </button>
         </div>
 

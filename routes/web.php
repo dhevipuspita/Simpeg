@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BpjsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JenisGolonganController;
-use App\Http\Controllers\KelasController;
 use App\Http\Controllers\PerizinanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapIzinController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\RiwayatGolonganController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\DataIndukController;
+use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\ResignController;
 use Illuminate\Support\Facades\Route;
 
@@ -93,6 +93,15 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::post("/import", [JenisGolonganController::class, 'import'])->name('jenis.import');
         Route::put("/{id}", [JenisGolonganController::class, 'update'])->name('jenis.update');
         Route::delete("/{id}", [JenisGolonganController::class, 'destroy'])->name('jenis.destroy');
+    });
+
+    Route::prefix("jenjang")->middleware("role:Admin")->group(function () {
+        Route::get("/", [JenjangController::class, 'index'])->name('jenjang.index');
+        Route::get("/template", [JenjangController::class, 'template'])->name('jenjang.template');
+        Route::post("/", [JenjangController::class, 'store'])->name('jenjang.store');
+        Route::post("/import", [JenjangController::class, 'import'])->name('jenjang.import');
+        Route::put("/{id}", [JenjangController::class, 'update'])->name('jenjang.update');
+        Route::delete("/{id}", [JenjangController::class, 'destroy'])->name('jenjang.destroy');
     });
 
     Route::prefix("resign")->middleware("role:Admin")->group(function () {
