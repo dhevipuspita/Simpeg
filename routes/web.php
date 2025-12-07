@@ -11,6 +11,8 @@ use App\Http\Controllers\RekapIzinController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\RiwayatGolonganController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\DataIndukController;
+use App\Http\Controllers\ResignController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -47,6 +49,15 @@ Route::prefix("/")->middleware('auth')->group(function () {
      * =======================================================================================================
      */
 
+    Route::prefix("data-induk")->middleware('role:Admin')->group(function () {
+        Route::get('/', [DataIndukController::class, 'index'])->name('data-induk.index');
+        Route::get("/create", [DataIndukController::class, 'create'])->name('data-induk.create');
+        Route::post('/', [DataIndukController::class, 'store'])->name('data-induk.store');
+        Route::get("/edit/{id}", [DataIndukController::class, 'edit'])->name('data-induk.edit');
+        Route::put("/{id}", [DataIndukController::class, 'update'])->name('data-induk.update');
+        Route::delete("/{id}", [DataIndukController::class, 'destroy'])->name('data-induk.destroy');
+    });
+
     Route::prefix("staff")->middleware('role:Admin')->group(function () {
         Route::get('/', [StaffController::class, 'index'])->name('staff.index');
         Route::get("/template", [StaffController::class, 'template'])->name('staff.template');
@@ -82,6 +93,14 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::post("/import", [JenisGolonganController::class, 'import'])->name('jenis.import');
         Route::put("/{id}", [JenisGolonganController::class, 'update'])->name('jenis.update');
         Route::delete("/{id}", [JenisGolonganController::class, 'destroy'])->name('jenis.destroy');
+    });
+
+    Route::prefix("resign")->middleware("role:Admin")->group(function () {
+    Route::get("/", [ResignController::class, 'index'])->name('resign.index');
+    Route::get("/create", [ResignController::class, 'create'])->name('resign.create');
+    Route::post("/", [ResignController::class, 'store'])->name('resign.store');
+    Route::put("/{id}", [ResignController::class, 'update'])->name('resign.update');
+    Route::delete("/{id}", [ResignController::class, 'destroy'])->name('resign.destroy');
     });
 
     /**

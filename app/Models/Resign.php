@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Resign extends Model
 {
-    use HasFactory;
-
-    protected $table = 'resigns';
-    protected $primaryKey = 'resignId';
+    protected $table = 'resign';
 
     protected $fillable = [
+        'data_induk_id',
+        'no',
+        'mulai_bertugas',
         'npa',
-        'name',
+        'nama',
         'jabatan',
         'gol',
         'jenjang',
@@ -25,7 +24,20 @@ class Resign extends Model
         'alasan_resign',
         'nik',
         'status_kepegawaian',
-        'tahun',
-        'no_sk',
+        'tgl',
+        'bln',
+        'thn',
+        'no_sk'
     ];
+
+    protected $casts = [
+        'mulai_bertugas' => 'date',
+        'tanggal_resign' => 'date'
+    ];
+
+    // Relasi ke Data Induk
+    public function dataInduk()
+    {
+        return $this->belongsTo(DataInduk::class);
+    }
 }
