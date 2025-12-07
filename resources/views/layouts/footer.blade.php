@@ -6,8 +6,7 @@
                 <script>
                     document.write(new Date().getFullYear());
                 </script>
-                , Developed By <a href="https://www.upnjatim.ac.id/" target="_blank" class="fw-semibold">UPN Veteran Jawa
-                    Timur</a>
+                , Developed By <a href="https://alazhaar.org/" target="_blank" class="fw-semibold">LPI Al Azhaar Tulungagung</a>
             </div>
 
         </div>

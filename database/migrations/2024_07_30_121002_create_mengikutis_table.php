@@ -11,11 +11,9 @@ return new class extends Migration
         Schema::create('mengikutis', function (Blueprint $table) {
             $table->id("mengikutiId");
             $table->unsignedBigInteger("santriId");
-            $table->unsignedBigInteger("matpelId");
             $table->timestamps();
 
             $table->foreign("santriId")->references("santriId")->on("santris")->onDelete("cascade");
-            $table->foreign("matpelId")->references("matpelId")->on("matpels")->onDelete("cascade");
         });
     }
 

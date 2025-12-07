@@ -6,15 +6,17 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4">Data Perizinan Cuti</h4>
 
-        <div class="d-block">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
+        <div class="d-block mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">
+                Tambah
+            </button>
         </div>
 
         <!-- Modal Tambah-->
         <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="{{ route('perizinan.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('perizinan.store') }}" method="POST">
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="tambahModalLabel">Tambah Data Perizinan</h5>
@@ -23,52 +25,97 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12 col-sm-12">
+
+                                {{-- Tanggal Surat --}}
+                                <div class="col-md-6 col-sm-12">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Alasan Perizinan<span
-                                                style="color:red">*</span></label>
-                                        <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
+                                        <label class="form-label">Tanggal Surat Permohonan Cuti
+                                            <span style="color:red">*</span>
+                                        </label>
+                                        <input type="date"
+                                               class="form-control"
+                                               name="tglSurat"
+                                               id="tglSurat_tambah"
+                                               required>
                                     </div>
                                 </div>
 
-                                <div class="col-md-12 col-sm-12">
+                                {{-- Nama Staff --}}
+                                <div class="col-md-6 col-sm-12">
                                     <div class="mb-3">
-                                        <label for="santriId" class="form-label">Nama Santri <span
-                                                style="color:red">*</span></label>
-                                        <select name="santriId" id="santriId" class="form-select select2">
-                                            <option selected hidden>=== Pilih Santri ====</option>
-                                            @foreach ($santri as $s)
-                                                <option value="{{ $s->santriId }}">
-                                                    {{ $s->name }}
+                                        <label for="staffId" class="form-label">Nama Staff
+                                            <span style="color:red">*</span>
+                                        </label>
+                                        <select name="staffId" id="staffId" class="form-select select2" required>
+                                            <option value="" selected hidden>=== Pilih Staff ===</option>
+                                            @foreach ($staff as $st)
+                                                <option value="{{ $st->staffId }}">
+                                                    {{ $st->name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
 
+                                {{-- NPA --}}
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">NPA</label>
+                                        <input type="text" class="form-control" name="npa" placeholder="Masukkan NPA">
+                                    </div>
+                                </div>
+
+                                {{-- Jenjang --}}
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Jenjang</label>
+                                        <input type="text" class="form-control" name="jenjang" placeholder="Masukkan Jenjang">
+                                    </div>
+                                </div>
+
+                                {{-- Jabatan --}}
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Jabatan</label>
+                                        <input type="text" class="form-control" name="jabatan" placeholder="Masukkan Jabatan">
+                                    </div>
+                                </div>
+
+                                {{-- Tanggal Mulai Cuti --}}
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tanggal Mulai Cuti
+                                            <span style="color:red">*</span>
+                                        </label>
+                                        <input type="date"
+                                               class="form-control"
+                                               name="tglMulai"
+                                               id="tglMulai_tambah"
+                                               required>
+                                    </div>
+                                </div>
+
+                                {{-- Tanggal Akhir Cuti --}}
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tanggal Berakhir Cuti
+                                            <span style="color:red">*</span>
+                                        </label>
+                                        <input type="date"
+                                               class="form-control"
+                                               name="tglAkhir"
+                                               id="tglAkhir_tambah"
+                                               required>
+                                    </div>
+                                </div>
+
+                                {{-- Alasan Cuti --}}
                                 <div class="col-md-12 col-sm-12">
                                     <div class="mb-3">
-                                        <label for="santriId" class="form-label">Bukti Pendukung
-                                            (.jpg/.png/.jpeg/.pdf)</label>
-                                        <input type="file" name="bukti" id="bukti" class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="flatpickr-date" class="form-label">Tanggal Keluar<span
-                                                style="color:red">*</span></label>
-                                        <input type="text" class="form-control" placeholder="YYYY-MM-DD"
-                                            id="flatpickr-date" name="tglKeluar" />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="flatpickr-date" class="form-label">Tanggal Kembali<span
-                                                style="color:red">*</span></label>
-                                        <input type="text" class="form-control" placeholder="YYYY-MM-DD"
-                                            id="flatpickr-date" name="tglKembali" />
+                                        <label class="form-label">Alasan Cuti
+                                            <span style="color:red">*</span>
+                                        </label>
+                                        <textarea name="alasan" cols="30" rows="4" class="form-control" required></textarea>
                                     </div>
                                 </div>
 
@@ -84,17 +131,14 @@
             </div>
         </div>
 
-        <div class="table-responsive">
+        {{-- Tabel Perizinan (dipendekkan kolomnya) --}}
+        <div class="table-responsive mt-3">
             <table class="table" id="table">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Tanggal Surat Permohonan Cuti</th>
                         <th>Nama Lengkap</th>
-                        <th>NIK</th>
-                        <th>NPA</th>
-                        <th>Tempat, Tanggal Lahir</th>
-                        <th>Alamat</th>
                         <th>Jenjang</th>
                         <th>Jabatan</th>
                         <th>Tanggal Mulai</th>
@@ -106,17 +150,55 @@
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    @foreach ($permissions as $key => $p)
+                    @foreach ($perizinan as $key => $p)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglSurat)->locale('id-ID')->translatedFormat('d F Y') }} </td>
-                            <td>{{ $p->santri->pengurus->name }}</td>
-                            <td style="world-wrap:break-world;">{{ $p->santri->name }}</td>
-                            <td style="world-wrap:break-world;">{{ $p->nik }}</td>
-                            <td style="world-wrap:break-world;">{{ $p->npa }}</td>
-                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->ttl)->locale('id-ID')->translatedFormat('d F Y') }} </td>
-                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglKeluar)->locale('id-ID')->translatedFormat('d F Y') }} </td>
-                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $p->tglKembali)->locale('id-ID')->translatedFormat('d F Y') }} </td>
+
+                            {{-- Tgl Surat --}}
+                            <td>
+                                @if ($p->tglSurat)
+                                    {{ \Carbon\Carbon::parse($p->tglSurat)->locale('id_ID')->translatedFormat('d F Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+
+                            {{-- Nama --}}
+                            <td>{{ $p->staff->name ?? $p->name ?? '-' }}</td>
+
+                            {{-- Jenjang --}}
+                            <td>{{ $p->jenjang ?? '-' }}</td>
+
+                            {{-- Jabatan --}}
+                            <td>{{ $p->jabatan ?? '-' }}</td>
+
+                            {{-- Tgl Mulai --}}
+                            <td>
+                                @if ($p->tglMulai)
+                                    {{ \Carbon\Carbon::parse($p->tglMulai)->locale('id_ID')->translatedFormat('d F Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+
+                            {{-- Tgl Akhir --}}
+                            <td>
+                                @if ($p->tglAkhir)
+                                    {{ \Carbon\Carbon::parse($p->tglAkhir)->locale('id_ID')->translatedFormat('d F Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+
+                            {{-- Lama Cuti --}}
+                            <td>{{ $p->lamaCuti ? $p->lamaCuti . ' hari' : '-' }}</td>
+
+                            {{-- Alasan (dibatasi lebar supaya rapi) --}}
+                            <td style="word-wrap: break-word; max-width: 250px;">
+                                {{ $p->alasan ?? '-' }}
+                            </td>
+
+                            {{-- Status --}}
                             <td>
                                 @if ($p->isComback)
                                     <span class="badge rounded-pill bg-success">Sudah Kembali</span>
@@ -124,108 +206,229 @@
                                     <span class="badge rounded-pill bg-warning">Belum Kembali</span>
                                 @endif
                             </td>
-                            <td class="text-center">
-                                @if ($p->file !== null)
-                                    <button class="btn btn-primary" id="bukti-permission"
-                                        data-file="{{ $p->file }}">Bukti</button>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td style="world-wrap:break-world;">{{ $p->description }}</td>
+
+                            {{-- Actions --}}
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                        data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>
+                                        data-bs-toggle="dropdown">
+                                        <i class="ti ti-dots-vertical"></i>
+                                    </button>
                                     <div class="dropdown-menu">
+                                        {{-- Info lengkap --}}
+                                        <button class="dropdown-item"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#infoModal{{ $p->perizinanId }}">
+                                            <i class="ti ti-info-circle me-1"></i>Info
+                                        </button>
+
+                                        {{-- Tandai sudah kembali --}}
                                         @if (!$p->isComback)
-                                            <button class="dropdown-item" id="update-status"
-                                                data-id="{{ $p->permissionId }}"><i
-                                                    class="ti ti-transfer-in me-1"></i>Santri
-                                                Kembali</button>
+                                            <button class="dropdown-item update-status"
+                                                    data-id="{{ $p->perizinanId }}">
+                                                <i class="ti ti-transfer-in me-1"></i>Tandai Sudah Kembali
+                                            </button>
                                         @endif
 
-                                        <button class="dropdown-item" data-bs-toggle="modal"
-                                            data-bs-target="#updateModal{{ $p->permissionId }}"><i
-                                                class="ti ti-pencil me-1"></i>Edit</button>
-                                        <button class="dropdown-item" id="delete-permission"
-                                            data-id="{{ $p->permissionId }}"><i
-                                                class="ti ti-trash me-1"></i>Delete</button>
+                                        {{-- Edit --}}
+                                        <button class="dropdown-item"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#updateModal{{ $p->perizinanId }}">
+                                            <i class="ti ti-pencil me-1"></i>Edit
+                                        </button>
+
+                                        {{-- Delete --}}
+                                        <button class="dropdown-item delete-perizinan"
+                                                data-id="{{ $p->perizinanId }}">
+                                            <i class="ti ti-trash me-1"></i>Delete
+                                        </button>
                                     </div>
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Modal Update-->
-                        <div class="modal fade" id="updateModal{{ $p->permissionId }}" tabindex="-1"
-                            aria-labelledby="updateModal{{ $p->permissionId }}Label" aria-hidden="true">
+                        {{-- Modal Info: semua data lengkap ditampilkan di sini --}}
+                        <div class="modal fade" id="infoModal{{ $p->perizinanId }}" tabindex="-1"
+                             aria-labelledby="infoModal{{ $p->perizinanId }}Label" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="infoModal{{ $p->perizinanId }}Label">
+                                            Detail Perizinan Cuti
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @php
+                                            $tglSurat = $p->tglSurat
+                                                ? \Carbon\Carbon::parse($p->tglSurat)->locale('id_ID')->translatedFormat('d F Y')
+                                                : '-';
+                                            $tglMulai = $p->tglMulai
+                                                ? \Carbon\Carbon::parse($p->tglMulai)->locale('id_ID')->translatedFormat('d F Y')
+                                                : '-';
+                                            $tglAkhir = $p->tglAkhir
+                                                ? \Carbon\Carbon::parse($p->tglAkhir)->locale('id_ID')->translatedFormat('d F Y')
+                                                : '-';
+                                            $ttlText = $p->birthPlace ?? '';
+                                            if ($p->birthDate) {
+                                                $ttlText .= ($ttlText ? ', ' : '') .
+                                                    \Carbon\Carbon::parse($p->birthDate)->locale('id_ID')->translatedFormat('d F Y');
+                                            }
+                                            $ttlText = $ttlText ?: '-';
+                                        @endphp
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><b>Tanggal Surat:</b> {{ $tglSurat }}</p>
+                                                <p><b>Nama Lengkap:</b> {{ $p->staff->name ?? $p->name ?? '-' }}</p>
+                                                <p><b>NIK:</b> {{ $p->nik ?? '-' }}</p>
+                                                <p><b>NPA:</b> {{ $p->npa ?? '-' }}</p>
+                                                <p><b>Tempat, Tanggal Lahir:</b> {{ $ttlText }}</p>
+                                                <p><b>Alamat:</b> {{ $p->alamat ?? '-' }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><b>Jenjang:</b> {{ $p->jenjang ?? '-' }}</p>
+                                                <p><b>Jabatan:</b> {{ $p->jabatan ?? '-' }}</p>
+                                                <p><b>Tanggal Mulai Cuti:</b> {{ $tglMulai }}</p>
+                                                <p><b>Tanggal Berakhir Cuti:</b> {{ $tglAkhir }}</p>
+                                                <p><b>Lama Cuti:</b> {{ $p->lamaCuti ? $p->lamaCuti . ' hari' : '-' }}</p>
+                                                <p><b>Status:</b>
+                                                    @if ($p->isComback)
+                                                        <span class="text-success">Sudah Kembali</span>
+                                                    @else
+                                                        <span class="text-warning">Belum Kembali</span>
+                                                    @endif
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <p><b>Alasan Cuti:</b></p>
+                                        <p>{{ $p->alasan ?? '-' }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Modal Update (Edit) --}}
+                        <div class="modal fade" id="updateModal{{ $p->perizinanId }}" tabindex="-1"
+                             aria-labelledby="updateModal{{ $p->perizinanId }}Label" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-                                    <form action="{{ route('perizinan.update', ['id' => $p->permissionId]) }}"
-                                        method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('perizinan.update', ['id' => $p->perizinanId]) }}"
+                                          method="POST">
                                         @csrf
                                         @method('PUT')
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="updateModal{{ $p->permissionId }}Label">Update
-                                                Data Perizinan</h5>
+                                            <h5 class="modal-title" id="updateModal{{ $p->perizinanId }}Label">
+                                                Update Data Perizinan
+                                            </h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close">
-                                            </button>
+                                                    aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row">
-                                                <div class="col-md-12 col-sm-12">
+
+                                                {{-- Tanggal Surat --}}
+                                                <div class="col-md-6 col-sm-12">
                                                     <div class="mb-3">
-                                                        <label for="name" class="form-label">Alasan Perizinan<span
-                                                                style="color:red">*</span></label>
-                                                        <textarea name="description" id="description" cols="30" rows="10" class="form-control">
-                                                            {{ $p->description }}
-                                                        </textarea>
+                                                        <label class="form-label">Tanggal Surat Permohonan Cuti
+                                                            <span style="color:red">*</span>
+                                                        </label>
+                                                        <input type="date"
+                                                               class="form-control"
+                                                               name="tglSurat"
+                                                               value="{{ $p->tglSurat }}"
+                                                               id="tglSurat_edit_{{ $p->perizinanId }}"
+                                                               required>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-12 col-sm-12">
+                                                {{-- Staff --}}
+                                                <div class="col-md-6 col-sm-12">
                                                     <div class="mb-3">
-                                                        <label for="santriId" class="form-label">Nama Santri <span
-                                                                style="color:red">*</span></label>
-                                                        <select name="santriId" id="santriId" class="form-select">
-                                                            <option selected hidden value="{{ $p->santriId }}">
-                                                                {{ $p->santri->name }}</option>
-                                                            @foreach ($santri as $s)
-                                                                <option value="{{ $s->santriId }}">
-                                                                    {{ $s->name }}
+                                                        <label class="form-label">Nama Staff
+                                                            <span style="color:red">*</span>
+                                                        </label>
+                                                        <select name="staffId" class="form-select">
+                                                            <option value="{{ $p->staffId }}" selected hidden>
+                                                                {{ $p->staff->name ?? $p->name ?? 'Pilih Staff' }}
+                                                            </option>
+                                                            @foreach ($staff as $st)
+                                                                <option value="{{ $st->staffId }}"
+                                                                    {{ $st->staffId == $p->staffId ? 'selected' : '' }}>
+                                                                    {{ $st->name }}
+                                                                    @if ($st->nik)
+                                                                        - {{ $st->nik }}
+                                                                    @endif
                                                                 </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
 
+                                                {{-- NPA, Jenjang, Jabatan --}}
+                                                <div class="col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">NPA</label>
+                                                        <input type="text" class="form-control" name="npa"
+                                                               value="{{ $p->npa }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Jenjang</label>
+                                                        <input type="text" class="form-control" name="jenjang"
+                                                               value="{{ $p->jenjang }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Jabatan</label>
+                                                        <input type="text" class="form-control" name="jabatan"
+                                                               value="{{ $p->jabatan }}">
+                                                    </div>
+                                                </div>
+
+                                                {{-- Tanggal Mulai & Akhir --}}
+                                                <div class="col-md-6 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Tanggal Mulai Cuti
+                                                            <span style="color:red">*</span>
+                                                        </label>
+                                                        <input type="date"
+                                                               class="form-control"
+                                                               name="tglMulai"
+                                                               id="tglMulai_edit_{{ $p->perizinanId }}"
+                                                               value="{{ $p->tglMulai }}"
+                                                               required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Tanggal Berakhir Cuti
+                                                            <span style="color:red">*</span>
+                                                        </label>
+                                                        <input type="date"
+                                                               class="form-control"
+                                                               name="tglAkhir"
+                                                               id="tglAkhir_edit_{{ $p->perizinanId }}"
+                                                               value="{{ $p->tglAkhir }}"
+                                                               required>
+                                                    </div>
+                                                </div>
+
+                                                {{-- Alasan --}}
                                                 <div class="col-md-12 col-sm-12">
                                                     <div class="mb-3">
-                                                        <label for="santriId" class="form-label">Bukti Pendukung
-                                                            (.jpg/.png/.jpeg/.pdf)</label>
-                                                        <input type="file" name="bukti" id="bukti"
-                                                            class="form-control">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label for="flatpickr-date" class="form-label">Tanggal Keluar<span
-                                                                style="color:red">*</span></label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="YYYY-MM-DD" id="flatpickr-date" name="tglKeluar"
-                                                            value="{{ $p->tglKeluar }}" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label for="flatpickr-date" class="form-label">Tanggal
-                                                            Kembali<span style="color:red">*</span></label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="YYYY-MM-DD" id="flatpickr-date"
-                                                            name="tglKembali" value="{{ $p->tglKembali }}" />
+                                                        <label class="form-label">Alasan Cuti
+                                                            <span style="color:red">*</span>
+                                                        </label>
+                                                        <textarea name="alasan" cols="30" rows="4" class="form-control" required>{{ $p->alasan }}</textarea>
                                                     </div>
                                                 </div>
 
@@ -233,7 +436,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
+                                                    data-bs-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </form>
@@ -247,20 +450,12 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script>
-        $(document).on("click", "#bukti-permission", function() {
-            let file = $(this).data("file");
-            Swal.fire({
-                imageUrl: `/storage/bukti/${file}`,
-                imageWidth: 800,
-                imageHeight: 800,
-                imageAlt: "A tall image"
-            });
-        })
-
-        $(document).on("click", "#delete-permission", function() {
-            let permissionId = $(this).data("id");
+        // Hapus
+        $(document).on("click", ".delete-perizinan", function() {
+            let perizinanId = $(this).data("id");
             Swal.fire({
                 title: 'Apakah Anda Yakin?',
                 text: "Data yang dihapus tidak dapat dikembalikan!",
@@ -274,7 +469,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "DELETE",
-                        url: "/perizinan/" + permissionId,
+                        url: "/perizinan/" + perizinanId,
                         data: {
                             "_token": "{{ csrf_token() }}"
                         },
@@ -283,14 +478,14 @@
                                 'Berhasil!',
                                 res.message,
                                 'success'
-                            ).then((result) => {
+                            ).then(() => {
                                 location.reload();
                             });
                         },
                         error: function(err) {
                             Swal.fire(
                                 'Gagal!',
-                                err.responseJSON.message,
+                                err.responseJSON?.message || 'Terjadi kesalahan',
                                 'error'
                             );
                         }
@@ -299,8 +494,9 @@
             });
         });
 
-        $(document).on("click", "#update-status", function() {
-            let permissionId = $(this).data("id");
+        // Update status isComback
+        $(document).on("click", ".update-status", function() {
+            let perizinanId = $(this).data("id");
             Swal.fire({
                 title: 'Apakah Anda Yakin?',
                 text: "Data akan diubah menjadi Sudah Kembali!",
@@ -314,7 +510,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "PUT",
-                        url: "/perizinan/update-status/" + permissionId,
+                        url: "/perizinan/update-status/" + perizinanId,
                         data: {
                             "_token": "{{ csrf_token() }}"
                         },
@@ -323,20 +519,30 @@
                                 'Berhasil!',
                                 res.message,
                                 'success'
-                            ).then((result) => {
+                            ).then(() => {
                                 location.reload();
                             });
                         },
                         error: function(err) {
                             Swal.fire(
                                 'Gagal!',
-                                err.responseJSON.message,
+                                err.responseJSON?.message || 'Terjadi kesalahan',
                                 'error'
                             );
                         }
                     });
                 }
             });
+        });
+
+        // Kalau pakai select2
+        $(document).ready(function () {
+            if ($.fn.select2) {
+                $('#staffId').select2({
+                    dropdownParent: $('#tambahModal'),
+                    width: '100%'
+                });
+            }
         });
     </script>
 @endpush

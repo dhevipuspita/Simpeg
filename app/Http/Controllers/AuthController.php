@@ -60,9 +60,6 @@ class AuthController extends Controller
 
             $user = User::with([
                 'role',
-                'guru',
-                'pengurus',
-                'wali',
             ])
                 ->where('username', $request->username)->first();
 

@@ -35,32 +35,22 @@
                 <ul class="menu-sub">
                     <li class="menu-item {{ Route::currentRouteName() == 'staff.index' ? 'active' : '' }}">
                         <a href="{{ route('staff.index') }}" class="menu-link">
-                            <div>Data Diri Staff</div>
+                            <div>Data Diri Pegawai</div>
                         </a>
                     </li>
                     <li class="menu-item">
                         <a class="menu-link">
-                            <div>Data Induk Staff</div>
+                            <div>Data Induk Pegawai</div>
                         </a>
                     </li>
-                    <li class="menu-item">
-                        <a class="menu-link">
-                            <div>Riwayat Staff</div>
+                    <li class="menu-item {{ Route::currentRouteName() == 'riwayat.index' ? 'active' : '' }}">
+                        <a href="{{ route('riwayat.index') }}" class="menu-link">
+                            <div>Riwayat Kepegawaian</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ Route::currentRouteName() == 'santri.index' ? 'active' : '' }}">
-                        <a href="{{ route('santri.index') }}" class="menu-link">
-                            <div>Santri</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ Route::currentRouteName() == 'pengurus.index' ? 'active' : '' }}">
-                        <a href="{{ route('pengurus.index') }}" class="menu-link">
-                            <div>Pengurus</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ Route::currentRouteName() == 'kelas.index' ? 'active' : '' }}">
-                        <a href="{{ route('kelas.index') }}" class="menu-link">
-                            <div>Kelas</div>
+                    <li class="menu-item {{ Route::currentRouteName() == 'jenis.index' ? 'active' : '' }}">
+                        <a href="{{ route('jenis.index') }}" class="menu-link">
+                            <div>Jenis Golongan Pegawai</div>
                         </a>
                     </li>
                     <li class="menu-item {{ Route::currentRouteName() == 'reset.index' ? 'active' : '' }}">
@@ -72,8 +62,8 @@
             </li>
         @endif
 
-        <li class="menu-item">
-            <a class="menu-link">
+       <li class="menu-item {{ Route::currentRouteName() == 'bpjs.index' ? 'active' : '' }}">
+            <a href="{{ route('bpjs.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-file-certificate"></i>
                 <div>BPJS</div>
             </a>

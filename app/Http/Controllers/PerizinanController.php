@@ -2,245 +2,152 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Permission;
-use App\Models\Santri;
-use App\Models\Status;
+use App\Models\Perizinan;
+use App\Models\Staff;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class PerizinanController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        $santri = Santri::with([
-            "pengurus",
-        ]);
+        $staff = Staff::orderBy('name')->get();
 
-        $permissions = Permission::with([
-            "santri" => [
-                "pengurus",
-            ],
-        ]);
+        $perizinan = Perizinan::with('staff')
+            ->orderBy('perizinanId', 'desc')
+            ->get();
 
-        if ($user->roleId == 3) {
-            $santri = $santri->where("pengurusId", $user->pengurus->pengurusId);
-            $permissions = $permissions->whereHas("santri", function ($query) use ($user) {
-                $query->where("pengurusId", $user->pengurus->pengurusId);
-            });
-        }
-
-        $santri = $santri->get();
-        $permissions = $permissions->orderBy('permissionId', 'desc')->get();
-
-        return view(
-            'pages.perizinan.index',
-            compact(
-                "santri",
-                "permissions"
-            )
-        );
-    }
-
-    public function check(Request $request, $id)
-    {
-        try {
-            $status = [];
-            $permission = Permission::where("santriId", $id)
-                ->where("isComback", false)
-                ->orderBy("permissionId", "desc")
-                ->first();
-
-            if ($permission) {
-                $status = Status::where("statusId", 2)->get();
-                $statuses = Status::whereIn("statusId", [1, 2, 3, 4])->get();
-
-                return response()->json([
-                    "status" => true,
-                    "data" => [
-                        "permission" => $permission,
-                        "status" => $status,
-                        "statuses" => $statuses,
-                    ],
-                    "message" => "Santri, " . $permission->santri->name . " memiliki izin dan belum kembali sejak " . \Carbon\Carbon::createFromFormat('Y-m-d', $permission->tglKeluar)->locale('id-ID')->translatedFormat('d F Y'),
-                ])->setStatusCode(200);
-
-            } else {
-                $status = Status::whereIn("statusId", [1, 2, 3, 4])->get();
-
-                return response()->json([
-                    "status" => true,
-                    "data" => [
-                        "permission" => $permission,
-                        "status" => $status,
-                        "statuses" => $status,
-                    ],
-                    "message" => "Santri, tidak memiliki izin",
-                ])->setStatusCode(404);
-            }
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                "status" => false,
-                "message" => $th->getMessage(),
-            ])->setStatusCode(500);
-        }
+        return view('pages.perizinan.index', compact('staff', 'perizinan'));
     }
 
     public function store(Request $request)
     {
         try {
             $request->validate([
-                "description" => "required",
-                "santriId" => "required",
-                "tglKeluar" => "required",
-                "tglKembali" => "required",
-                "bukti" => "mimes:jpg,jpeg,png",
+                'tglSurat'  => 'required|date',
+                'staffId'   => 'required|exists:staff,staffId',
+                'tglMulai'  => 'required|date',
+                'tglAkhir'  => 'required|date|after_or_equal:tglMulai',
+                'npa'       => 'nullable|string|max:255',
+                'jenjang'   => 'nullable|string|max:255',
+                'jabatan'   => 'nullable|string|max:255',
+                'alasan'    => 'nullable|string',
+                'isComback' => 'nullable|boolean',
             ]);
-            $user = Auth::user();
-            $santriId = (int) $request->santriId;
-            $santri = Santri::find($santriId);
 
-            $permission = Permission::where("santriId", $santriId)
-                ->where("tglKeluar", $request->tglKeluar)
-                ->first();
+            $staff = Staff::findOrFail($request->staffId);
 
-            // dd($santri->toArray(), $santriId, $permission->toArray());
+            // HITUNG LAMA CUTI (dalam hari, inklusif)
+            $mulai = Carbon::parse($request->tglMulai);
+            $akhir = Carbon::parse($request->tglAkhir);
+            $lamaCuti = $mulai->diffInDays($akhir) + 1;
 
-            if ($permission) {
-                return back()->with("error", "Santri " . $santri->name . " sudah memiliki izin pada tanggal " . $request->tglKeluar);
-            }
+            Perizinan::create([
+                'tglSurat'   => $request->tglSurat,
+                'staffId'    => $staff->staffId,
 
-            if ($request->has("bukti")) {
-                $file = $request->file("bukti");
-                $fileName = md5($file->getClientOriginalName()) . "." . $file->getClientOriginalExtension();
-                $file->storeAs("public/bukti/", $fileName);
+                // AUTO COPY DARI STAFF
+                'name'       => $staff->name,
+                'nik'        => $staff->nik,
+                'birthPlace' => $staff->birthPlace ?? null,
+                'birthDate'  => $staff->birthDate ?? null,
+                'alamat'     => $staff->alamat ?? null,
 
-                Permission::create([
-                    "santriId" => $santriId,
-                    "description" => $request->description,
-                    "tglKeluar" => $request->tglKeluar,
-                    "tglKembali" => $request->tglKembali,
-                    "file" => $fileName,
-                ]);
-            } else {
-                Permission::create([
-                    "santriId" => $santriId,
-                    "description" => $request->description,
-                    "tglKeluar" => $request->tglKeluar,
-                    "tglKembali" => $request->tglKembali,
-                ]);
-            }
+                // DIISI MANUAL DARI FORM
+                'npa'        => $request->npa,
+                'jenjang'    => $request->jenjang,
+                'jabatan'    => $request->jabatan,
 
-            return back()->with("success", "Data berhasil disimpan");
+                // DARI FORM + HITUNGAN
+                'tglMulai'   => $request->tglMulai,
+                'tglAkhir'   => $request->tglAkhir,
+                'lamaCuti'   => $lamaCuti,
+                'alasan'     => $request->alasan,
+                'isComback'  => $request->boolean('isComback', false),
+            ]);
+
+            return back()->with('success', 'Data perizinan berhasil ditambahkan.');
         } catch (\Throwable $th) {
-            return back()->with("error", $th->getMessage());
+            return back()->with('error', $th->getMessage());
         }
     }
 
     public function update(Request $request, $id)
     {
         try {
+            $perizinan = Perizinan::findOrFail($id);
+
             $request->validate([
-                "description" => "required",
-                "santriId" => "required",
-                "tglKeluar" => "required",
-                "tglKembali" => "required",
-                "bukti" => "mimes:jpg,jpeg,png",
+                'tglSurat'  => 'required|date',
+                'staffId'   => 'required|exists:staff,staffId',
+                'tglMulai'  => 'required|date',
+                'tglAkhir'  => 'required|date|after_or_equal:tglMulai',
+                'npa'       => 'nullable|string|max:255',
+                'jenjang'   => 'nullable|string|max:255',
+                'jabatan'   => 'nullable|string|max:255',
+                'alasan'    => 'nullable|string',
+                'isComback' => 'nullable|boolean',
             ]);
-            $user = Auth::user();
-            $santri = Santri::find($santriId);
-            $permission = Permission::with([
-                "santri",
-            ])->where("permissionId", $id);
 
-            $check = Permission::where("santriId", $santriId)
-                ->where("tglKeluar", $request->tglKeluar)
-                ->where("permissionId", "!=", $id)
-                ->first();
+            $staff = Staff::findOrFail($request->staffId);
 
-            if ($check) {
-                return back()->with("error", "Santri " . $santri->name . " sudah memiliki izin pada tanggal " . $request->tglKeluar);
-            }
+            // HITUNG ULANG LAMA CUTI
+            $mulai = Carbon::parse($request->tglMulai);
+            $akhir = Carbon::parse($request->tglAkhir);
+            $lamaCuti = $mulai->diffInDays($akhir) + 1;
 
-            if ($request->has("bukti")) {
-                $old = Permission::find($id);
-                $path = "public/bukti/" . $old->file;
+            $perizinan->update([
+                'tglSurat'   => $request->tglSurat,
+                'staffId'    => $staff->staffId,
 
-                if (Storage::exists($path)) {
-                    Storage::delete($path);
-                }
+                // AUTO UPDATE DARI STAFF
+                'name'       => $staff->name,
+                'nik'        => $staff->nik,
+                'birthPlace' => $staff->birthPlace ?? null,
+                'birthDate'  => $staff->birthDate ?? null,
+                'alamat'     => $staff->alamat ?? null,
 
-                $file = $request->file("bukti");
-                $fileName = md5($file->getClientOriginalName()) . "." . $file->getClientOriginalExtension();
-                $file->storeAs("public/bukti/", $fileName);
+                // DIISI MANUAL DARI FORM
+                'npa'        => $request->npa,
+                'jenjang'    => $request->jenjang,
+                'jabatan'    => $request->jabatan,
 
-                $permission->update([
-                    "santriId" => $santri->santriId,
-                    "description" => $request->description,
-                    "tglKeluar" => $request->tglKeluar,
-                    "tglKembali" => $request->tglKembali,
-                    "file" => $fileName,
-                ]);
+                // DARI FORM + HITUNGAN
+                'tglMulai'   => $request->tglMulai,
+                'tglAkhir'   => $request->tglAkhir,
+                'lamaCuti'   => $lamaCuti,
+                'alasan'     => $request->alasan,
+                'isComback'  => $request->boolean('isComback', $perizinan->isComback),
+            ]);
 
-            } else {
-                $permission->update([
-                    "santriId" => $santri->santriId,
-                    "description" => $request->description,
-                    "tglKeluar" => $request->tglKeluar,
-                    "tglKembali" => $request->tglKembali,
-                ]);
-            }
-
-            return back()->with("success", "Data berhasil diubah");
-
+            return back()->with('success', 'Data perizinan berhasil diubah.');
         } catch (\Throwable $th) {
-            return back()->with("error", $th->getMessage());
+            return back()->with('error', $th->getMessage());
         }
     }
 
     public function destroy($id)
     {
-        try {
-            $permission = Permission::find($id);
-            $path = "public/bukti/" . $permission->file;
+        $perizinan = Perizinan::findOrFail($id);
+        $perizinan->delete();
 
-            if (Storage::exists($path)) {
-                Storage::delete($path);
-            }
-
-            $permission->delete();
-
-            return response()->json([
-                "status" => true,
-                "message" => "Data berhasil dihapus",
-            ])->setStatusCode(200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "status" => false,
-                "message" => $th->getMessage(),
-            ])->setStatusCode(500);
-        }
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data perizinan berhasil dihapus.',
+        ], 200);
     }
 
     public function updateStatus($id)
     {
-        try {
-            $permission = Permission::find($id);
-            $permission->update([
-                "isComback" => true,
-            ]);
+        $perizinan = Perizinan::findOrFail($id);
 
-            return response()->json([
-                "status" => true,
-                "message" => "Data berhasil diubah",
-            ])->setStatusCode(200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "status" => false,
-                "message" => $th->getMessage(),
-            ])->setStatusCode(500);
-        }
+        $perizinan->update([
+            'isComback' => true,
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Status kepulangan berhasil diperbarui.',
+        ], 200);
     }
 }

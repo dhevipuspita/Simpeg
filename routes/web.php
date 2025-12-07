@@ -1,22 +1,16 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BpjsController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GuruController;
-use App\Http\Controllers\InputMatpelSantriController;
+use App\Http\Controllers\JenisGolonganController;
 use App\Http\Controllers\KelasController;
-use App\Http\Controllers\MadinController;
-use App\Http\Controllers\MandiriController;
-use App\Http\Controllers\MatpelController;
-use App\Http\Controllers\PengurusController;
 use App\Http\Controllers\PerizinanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RekapIzinController;
-use App\Http\Controllers\RekapMandiriController;
-use App\Http\Controllers\SantriController;
-use App\Http\Controllers\SekolahController;
+use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\RiwayatGolonganController;
 use App\Http\Controllers\StaffController;
-use App\Http\Controllers\SubmissionController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -32,44 +26,6 @@ Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::prefix("/")->middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    /**
-     * =======================================================================================================
-     * Route to the Abensi page
-     * =======================================================================================================
-     */
-    Route::prefix("sekolah")->middleware('role:Admin,Guru')->group(function () {
-        Route::get('/', [SekolahController::class, 'index'])->name('sekolah.index');
-        Route::get("/api-santri/{id}", [SekolahController::class, 'apiSantri'])->name('sekolah.api-santri');
-        Route::get("/template", [SekolahController::class, 'template'])->name('sekolah.template');
-        Route::post('/', [SekolahController::class, 'store'])->name('sekolah.store');
-        Route::post("/import", [SekolahController::class, 'import'])->name('sekolah.import');
-        Route::post("/export", [SekolahController::class, 'export'])->name('sekolah.export');
-        Route::put("/{id}", [SekolahController::class, 'update'])->name('sekolah.update');
-        Route::delete("/{id}", [SekolahController::class, 'destroy'])->name('sekolah.destroy');
-    });
-
-    Route::prefix("madin")->middleware("role:Admin,Guru")->group(function () {
-        Route::get("/", [MadinController::class, 'index'])->name('madin.index');
-        Route::get("/api-santri/{id}", [MadinController::class, 'apiSantri'])->name('madin.api-santri');
-        Route::get("/template", [MadinController::class, 'template'])->name('madin.template');
-        Route::post("/", [MadinController::class, 'store'])->name('madin.store');
-        Route::post("/import", [MadinController::class, 'import'])->name('madin.import');
-        Route::post("/export", [MadinController::class, 'export'])->name('madin.export');
-        Route::put("/{id}", [MadinController::class, 'update'])->name('madin.update');
-        Route::delete("/{id}", [MadinController::class, 'destroy'])->name('madin.destroy');
-    });
-
-    Route::prefix("mandiri")->middleware("role:Admin,Pengurus")->group(function () {
-        Route::get("/", [MandiriController::class, 'index'])->name('mandiri.index');
-        Route::get("/api-santri/{id}", [MandiriController::class, 'apiSantri'])->name('mandiri.api-santri');
-        Route::get("/template", [MandiriController::class, 'template'])->name('mandiri.template');
-        Route::post("/", [MandiriController::class, 'store'])->name('mandiri.store');
-        Route::post("/import", [MandiriController::class, 'import'])->name('mandiri.import');
-        Route::post("/export", [MandiriController::class, 'export'])->name('mandiri.export');
-        Route::put("/{id}", [MandiriController::class, 'update'])->name('mandiri.update');
-        Route::delete("/{id}", [MandiriController::class, 'destroy'])->name('mandiri.destroy');
-    });
-
     Route::prefix("perizinan")->middleware("role:Admin,Pengurus")->group(function () {
         Route::get("/", [PerizinanController::class, 'index'])->name('perizinan.index');
         Route::post("/", [PerizinanController::class, 'store'])->name('perizinan.store');
@@ -79,12 +35,6 @@ Route::prefix("/")->middleware('auth')->group(function () {
     });
 
     Route::get("perizinan/check/{id}", [PerizinanController::class, 'check'])->name('perizinan.check');
-
-    /**
-     * =======================================================================================================
-     * Route to the Rekap page
-     * =======================================================================================================
-     */
 
     Route::prefix("rekap-perizinan")->middleware("role:Admin,Pengurus,Wali Santri")->group(function () {
         Route::get("/", [RekapIzinController::class, 'index'])->name('rekapPerizinan.index');
@@ -96,23 +46,6 @@ Route::prefix("/")->middleware('auth')->group(function () {
      * Route to the Admin page
      * =======================================================================================================
      */
-    Route::prefix("guru")->middleware('role:Admin')->group(function () {
-        Route::get('/', [GuruController::class, 'index'])->name('guru.index');
-        Route::get("/template", [GuruController::class, 'template'])->name('guru.template');
-        Route::post('/', [GuruController::class, 'store'])->name('guru.store');
-        Route::post("/import", [GuruController::class, 'import'])->name('guru.import');
-        Route::put("/{id}", [GuruController::class, 'update'])->name('guru.update');
-        Route::delete("/{id}", [GuruController::class, 'destroy'])->name('guru.destroy');
-    });
-
-    Route::prefix("/pengurus")->middleware('role:Admin')->group(function () {
-        Route::get('/', [PengurusController::class, 'index'])->name('pengurus.index');
-        Route::get("/template", [PengurusController::class, 'template'])->name('pengurus.template');
-        Route::post('/', [PengurusController::class, 'store'])->name('pengurus.store');
-        Route::post("/import", [PengurusController::class, 'import'])->name('pengurus.import');
-        Route::put("/{id}", [PengurusController::class, 'update'])->name('pengurus.update');
-        Route::delete("/{id}", [PengurusController::class, 'destroy'])->name('pengurus.destroy');
-    });
 
     Route::prefix("staff")->middleware('role:Admin')->group(function () {
         Route::get('/', [StaffController::class, 'index'])->name('staff.index');
@@ -122,23 +55,33 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::put("/{id}", [StaffController::class, 'update'])->name('staff.update');
         Route::delete("/{id}", [StaffController::class, 'destroy'])->name('staff.destroy');
     });
-    
-    Route::prefix("santri")->middleware('role:Admin')->group(function () {
-        Route::get('/', [SantriController::class, 'index'])->name('santri.index');
-        Route::get("/template", [SantriController::class, 'template'])->name('santri.template');
-        Route::post('/', [SantriController::class, 'store'])->name('santri.store');
-        Route::post("/import", [SantriController::class, 'import'])->name('santri.import');
-        Route::put("/{id}", [SantriController::class, 'update'])->name('santri.update');
-        Route::delete("/{id}", [SantriController::class, 'destroy'])->name('santri.destroy');
+
+    Route::prefix("riwayat")->middleware('role:Admin')->group(function () {
+        Route::get('/', [RiwayatController::class, 'index'])->name('riwayat.index');
+        Route::get("/template", [RiwayatController::class, 'template'])->name('riwayat.template');
+        Route::post('/', [RiwayatController::class, 'store'])->name('riwayat.store');
+        Route::post("/import", [RiwayatController::class, 'import'])->name('riwayat.import');
+        Route::put("/{id}", [RiwayatController::class, 'update'])->name('riwayat.update');
+        Route::delete("/{id}", [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
+        Route::get('/{id}/golongan', [RiwayatController::class, 'show'])->name('riwayat.golongan');
     });
 
-    Route::prefix("kelas")->middleware("role:Admin")->group(function () {
-        Route::get("/", [KelasController::class, 'index'])->name('kelas.index');
-        Route::get("/template", [KelasController::class, 'template'])->name('kelas.template');
-        Route::post("/", [KelasController::class, 'store'])->name('kelas.store');
-        Route::post("/import", [KelasController::class, 'import'])->name('kelas.import');
-        Route::put("/{id}", [KelasController::class, 'update'])->name('kelas.update');
-        Route::delete("/{id}", [KelasController::class, 'destroy'])->name('kelas.destroy');
+    Route::prefix("riwayat_gol")->middleware('role:Admin')->group(function () {
+        Route::get('/', [RiwayatGolonganController::class, 'index'])->name('riwayat_gol.index');
+        Route::get("/template", [RiwayatGolonganController::class, 'template'])->name('riwayat_gol.template');
+        Route::post('/', [RiwayatGolonganController::class, 'store'])->name('riwayat_gol.store');
+        Route::post("/import", [RiwayatGolonganController::class, 'import'])->name('riwayat_gol.import');
+        Route::put("/{id}", [RiwayatGolonganController::class, 'update'])->name('riwayat_gol.update');
+        Route::delete("/{id}", [RiwayatGolonganController::class, 'destroy'])->name('riwayat_gol.destroy');
+    });
+    
+    Route::prefix("jenis")->middleware("role:Admin")->group(function () {
+        Route::get("/", [JenisGolonganController::class, 'index'])->name('jenis.index');
+        Route::get("/template", [JenisGolonganController::class, 'template'])->name('jenis.template');
+        Route::post("/", [JenisGolonganController::class, 'store'])->name('jenis.store');
+        Route::post("/import", [JenisGolonganController::class, 'import'])->name('jenis.import');
+        Route::put("/{id}", [JenisGolonganController::class, 'update'])->name('jenis.update');
+        Route::delete("/{id}", [JenisGolonganController::class, 'destroy'])->name('jenis.destroy');
     });
 
     /**
@@ -146,6 +89,16 @@ Route::prefix("/")->middleware('auth')->group(function () {
      * Route to the Profile page
      * =======================================================================================================
      */
+
+    
+    Route::prefix("bpjs")->middleware("role:Admin")->group(function () {
+        Route::get("/", [BpjsController::class, 'index'])->name('bpjs.index');
+        Route::get("/template", [BpjsController::class, 'template'])->name('bpjs.template');
+        Route::post("/", [BpjsController::class, 'store'])->name('bpjs.store');
+        Route::post("/import", [BpjsController::class, 'import'])->name('bpjs.import');
+        Route::put("/{id}", [BpjsController::class, 'update'])->name('bpjs.update');
+        Route::delete("/{id}", [BpjsController::class, 'destroy'])->name('bpjs.destroy');
+    });
 
     Route::prefix("profile")->group(function () {
         Route::get("/", [ProfileController::class, 'index'])->name('profile.index');

@@ -12,7 +12,7 @@ class Mengikuti extends Model
     protected $table = 'mengikutis';
     protected $primaryKey = 'mengikutiId';
     protected $fillable = [
-        'santriId',
+        'santriId', 
         'matpelId',
         "created_at",
         "updated_at",

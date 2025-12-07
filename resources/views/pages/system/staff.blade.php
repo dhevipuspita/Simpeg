@@ -144,17 +144,13 @@
         <div class="table-responsive">
             <table class="table" id="table">
                 <thead>
-                    <tr>
+                    <tr class="text-align: center">
                         <th>No</th>
                         <th>Nama Staff</th>
                         <th>NIK</th>
                         <th>Tempat Lahir</th>
                         <th>Tanggal Lahir</th>
-                        <th>Alamat</th>
-                        <th>No HP</th>
                         <th>Status Perkawinan</th>
-                        <th>Nama Suami/Istri</th>
-                        <th>Email</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -166,11 +162,7 @@
                             <td>{{ $s->nik ?? '-' }}</td>
                             <td>{{ $s->birthPlace ?? '-' }}</td>
                             <td>{{ $s->birthDate ?? '-' }}</td>
-                            <td>{{ $s->alamat ?? '-' }}</td>
-                            <td>{{ $s->noHp ?? '-' }}</td>
                             <td>{{ $s->statusPerkawinan ?? '-' }}</td>
-                            <td>{{ $s->suami_istri ?? '-' }}</td>
-                            <td>{{ $s->email ?? '-' }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -202,17 +194,17 @@
                                     </div>
                                     <div class="modal-body">
                                         <p><b>Nama :</b> {{ $s->name }}</p>
-                                        <p><b>TTL :</b>
+                                        <p><b>Tempat, Tanggal Lahir :</b>
                                             {{ $s->birthPlace ?? '-' }}
                                             @if ($s->birthDate)
                                                 , {{ \Carbon\Carbon::parse($s->birthDate)->translatedFormat('d F Y') }}
                                             @endif
                                         </p>
                                         <p><b>NIK :</b> {{ $s->nik ?? '-' }}</p>
-                                        <p><b>Alamat :</b> {{ $s->alamat ?? '-' }}</p>
-                                        <p><b>No HP :</b> {{ $s->noHp ?? '-' }}</p>
                                         <p><b>Status Perkawinan :</b> {{ $s->statusPerkawinan ?? '-' }}</p>
                                         <p><b>Suami/Istri :</b> {{ $s->suami_istri ?? '-' }}</p>
+                                        <p><b>Alamat :</b> {{ $s->alamat ?? '-' }}</p>
+                                        <p><b>No HP :</b> {{ $s->noHp ?? '-' }}</p>
                                         <p><b>Email :</b> {{ $s->email ?? '-' }}</p>
                                     </div>
                                     <div class="modal-footer">
