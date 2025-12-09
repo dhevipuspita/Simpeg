@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\BpjsImport;
 use App\Models\Bpjs;
 use App\Models\Staff;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BpjsController extends Controller
 {
@@ -89,6 +92,26 @@ class BpjsController extends Controller
         return redirect()
             ->route('bpjs.index')
             ->with('success', 'Data BPJS berhasil diperbarui!');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            Excel::import(new BpjsImport, $request->file('excelFile'));
+
+            return back()->with('success', 'Data BPJS berhasil diimport.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal mengimport data BPJS: ' . $e->getMessage());
+        }
+    }
+
+    public function template()
+    {
+        return response()->download(Storage::path('public/Template-BPJS.xlsx'));
     }
 
     public function destroy($id)

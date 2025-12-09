@@ -2,7 +2,7 @@
     <div class="app-brand demo">
         <a href="index.html" class="app-brand-link">
             <span class="app-brand-logo demo">
-                <img src="{{ url('assets/img/logo-pondok.png') }}" alt="Logo Pondok" style="max-height: 25px; ;">
+                <img src="{{ url('assets/img/logo-pondok.jpg') }}" alt="Logo Pondok" style="max-height: 25px; ;">
             </span>
             <span class="app-brand-text demo menu-text fw-bold" style="font-size: 15px; ">Pendidikan Islam
                 <br>Al Alzhar</span>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{{ url('assets/css/style.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{ url('assets/img/logo-pondok.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url('assets/img/logo-pondok.jpg') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <title>Aplikasi Absensi Digital</title>
@@ -29,14 +29,12 @@
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-right">
-                    <h1>Aplikasi Absensi Santri</h1>
+                    <h1>Sistem Informasi Kepegawaian</h1>
                     <div class="d-block">
-                        <img src="{{ url('assets/img/logo-pondok.png') }}" alt="Logo Pondok"
+                        <img src="{{ url('assets/img/logo-pondok.jpg') }}" alt="Logo Pondok"
                             style="margin: 10px 0px 10px 0px; max-height:100px">
-                        <img src="{{ url('assets/img/logo-pondok-2.png') }}" alt="Logo Pondok"
-                            style="margin: 10px 0px 10px 10px; max-height:90px">
                     </div>
-                    <p> Untuk keperluan Absensi dan Perizinan Santri PP Darul Ibadah Al - Baiad</p>
+                    <p> Untuk Aplikasi Sistem Informasi Kepegawaian Lembaga Pendidikan Islam Al-Azhaar</p>
                 </div>
             </div>
         </div>
