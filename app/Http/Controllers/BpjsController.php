@@ -8,16 +8,32 @@ use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class BpjsController extends Controller
 {
     public function index()
     {
-        // Ambil BPJS beserta relasi staff (kalau nanti mau dipakai di view)
-        $bpjs  = Bpjs::with('staff')->get();
+        // Data BPJS nanti diambil lewat AJAX (DataTables)
         $staff = Staff::orderBy('name')->get();
 
-        return view('pages.bpjs.index', compact('bpjs', 'staff'));
+        return view('pages.bpjs.index', compact('staff'));
+    }
+
+    public function data(Request $request)
+    {
+        $query = Bpjs::with('staff')->select('bpjs.*');
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('nama_staff', function ($row) {
+                return $row->staff->name ?? $row->name ?? '-';
+            })
+            ->editColumn('noBpjs', fn($row) => $row->noBpjs ?? '-')
+            ->editColumn('kjp_2p', fn($row) => $row->kjp_2p ?? '-')
+            ->editColumn('kjp_3p', fn($row) => $row->kjp_3p ?? '-')
+            ->addColumn('staffId', fn($row) => $row->staffId)
+            ->make(true);
     }
 
     public function create()

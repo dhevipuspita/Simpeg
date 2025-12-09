@@ -148,6 +148,7 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::post("/import", [BpjsController::class, 'import'])->name('bpjs.import');
         Route::put("/{id}", [BpjsController::class, 'update'])->name('bpjs.update');
         Route::delete("/{id}", [BpjsController::class, 'destroy'])->name('bpjs.destroy');
+        Route::get("/data", [BpjsController::class, 'data'])->name('bpjs.data');
     });
 
     Route::prefix("profile")->group(function () {
