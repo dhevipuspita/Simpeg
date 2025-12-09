@@ -58,6 +58,16 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::put("/{id}", [DataIndukController::class, 'update'])->name('data-induk.update');
         Route::delete("/{id}", [DataIndukController::class, 'destroy'])->name('data-induk.destroy');
     });
+    Route::prefix("data-induk")->middleware('role:Admin')->group(function () {
+        Route::get('/', [DataIndukController::class, 'index'])->name('data-induk.index');
+        Route::get("/create", [DataIndukController::class, 'create'])->name('data-induk.create');
+        Route::post('/', [DataIndukController::class, 'store'])->name('data-induk.store');
+        Route::post("/import", [DataIndukController::class, 'import'])->name('data-induk.import');
+        Route::get("/edit/{id}", [DataIndukController::class, 'edit'])->name('data-induk.edit');
+        Route::put("/{id}", [DataIndukController::class, 'update'])->name('data-induk.update');
+
+        Route::delete("/{id}", [DataIndukController::class, 'destroy'])->name('data-induk.destroy');
+    });
 
     Route::prefix("staff")->middleware('role:Admin')->group(function () {
         Route::get('/', [StaffController::class, 'index'])->name('staff.index');
@@ -66,6 +76,7 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::post("/import", [StaffController::class, 'import'])->name('staff.import');
         Route::put("/{id}", [StaffController::class, 'update'])->name('staff.update');
         Route::delete("/{id}", [StaffController::class, 'destroy'])->name('staff.destroy');
+        
     });
 
     Route::prefix("riwayat")->middleware('role:Admin')->group(function () {
