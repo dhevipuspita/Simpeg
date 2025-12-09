@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\DataInduk;
 use Illuminate\Http\Request;
+use App\Imports\DataIndukImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class DataIndukController extends Controller
 {
@@ -59,7 +62,16 @@ class DataIndukController extends Controller
             return redirect()->back()->with('error', 'Data induk gagal diubah.');
         }
     }
+public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls'
+    ]);
 
+    Excel::import(new DataIndukImport, $request->file('file'));
+
+    return redirect()->back()->with('success', 'Data Induk berhasil diimport');
+}
     // Hapus data induk
     public function destroy($id)
     {

@@ -6,11 +6,10 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">Data Induk</h4>
 
-    <div class="d-block mb-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">
-            Tambah
-        </button>
-    </div>
+        <div class="d-block mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
+        </div>
 
             {{-- Modal Tambah --}}
             <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
@@ -84,6 +83,37 @@
             </div>
         </div>
     </div>
+
+
+     <!-- Modal Import -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('data-induk.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Import Data Induk Pegawai</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Pilih File (Excel)</label>
+                    <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
+
+                    <small class="text-muted d-block mt-2">
+                        Format file yang didukung: <b>.xlsx, .xls</b><br>
+                        Pastikan kolom mengikuti template.
+                    </small>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     
 

@@ -31,6 +31,7 @@ class ResignController extends Controller
         ]);
     }
   // =========================
+  
 //  CREATE (REDIRECT KE INDEX)
 // =========================
 public function create(Request $request)
@@ -134,6 +135,8 @@ public function create(Request $request)
             return back()->with('error', 'Data resign gagal diubah.');
         }
     }
+
+    
 
     // =========================
     //  DELETE RESIGN

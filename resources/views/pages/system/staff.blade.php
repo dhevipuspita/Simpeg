@@ -24,13 +24,26 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Nama Staff <span style="color:red">*</span></label>
-                                        <input type="text" class="form-control" id="name" placeholder="Nama Lengkap"
-                                            name="name" required />
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                
+                                <div class="mb-3 position-relative">
+    <label class="form-label">Nama Pegawai</label>
+
+    <!-- Input yang bisa diketik -->
+    <input type="text" id="searchPegawai" class="form-control" placeholder="Ketik nama...">
+
+    <!-- Simpan ID ke hidden input -->
+    <input type="hidden" name="data_induk_id" id="dataIndukId" required>
+
+    <!-- Tempat munculnya list hasil pencarian -->
+    <div id="pegawaiList"
+         class="border bg-white w-100 d-none position-absolute"
+         style="z-index: 1000; max-height: 180px; overflow-y:auto;">
+    </div>
+</div>
+
+                            </div>
+
                                 <div class="col-md-6 col-sm-12">
                                     <div class="mb-3">
                                         <label for="nik" class="form-label">NIK</label>
@@ -352,7 +365,20 @@
 @endsection
 
 @push('scripts')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script>
+        $(document).ready(function() {
+                   // Aktifkan Select2
+            $('.select2').select2({
+                dropdownParent: $('#tambahModal'),
+                width: '100%',
+                placeholder: "Cari nama pegawai...",
+                allowClear: true
+            });
+        });
+
         $(document).on('click', '.delete-staff', function() {
             let id = $(this).data('id');
             Swal.fire({
@@ -393,4 +419,54 @@
             })
         })
     </script>
+    <script>
+    let dataInduk = @json($dataInduk);
+
+    const input = document.getElementById('searchPegawai');
+    const list = document.getElementById('pegawaiList');
+    const hiddenId = document.getElementById('dataIndukId');
+
+    input.addEventListener('keyup', function () {
+        let keyword = this.value.toLowerCase();
+        list.innerHTML = "";
+
+        if (!keyword) {
+            hiddenId.value = "";
+            list.classList.add('d-none');
+            return;
+        }
+
+        let hasil = dataInduk.filter(d => d.nama.toLowerCase().includes(keyword));
+
+        if (hasil.length === 0) {
+            list.classList.add('d-none');
+            return;
+        }
+
+        hasil.forEach(d => {
+            let item = document.createElement('div');
+            item.classList.add('p-2', 'border-bottom');
+            item.style.cursor = "pointer";
+            item.textContent = d.nama;
+
+            item.onclick = () => {
+                input.value = d.nama;
+                hiddenId.value = d.id;
+                list.classList.add('d-none');
+            };
+
+            list.appendChild(item);
+        });
+
+        list.classList.remove('d-none');
+    });
+
+    // Klik luar -> menutup list
+    document.addEventListener('click', function (e) {
+        if (!input.contains(e.target)) {
+            list.classList.add('d-none');
+        }
+    });
+</script>
+
 @endpush
