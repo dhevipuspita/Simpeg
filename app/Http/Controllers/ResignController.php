@@ -8,34 +8,40 @@ use Illuminate\Http\Request;
 
 class ResignController extends Controller
 {
-    // ======================
-    //  TAMPILKAN SEMUA RESIGN
-    // ======================
-    public function index()
+    // =========================
+    //  INDEX (LIST RESIGN)
+    // =========================
+    public function index(Request $request)
     {
         $resign = Resign::with('dataInduk')->get();
-        return view('pages.resign', compact('resign'));
-    }
 
-    // ======================
-    //  FORM RESIGN
-    //  Bisa berasal dari Data Induk
-    // ======================
-    public function create(Request $request)
-    {
-        $dataIndukId = $request->query('data_induk_id');
+        // Jika tombol "Resign" diklik dari Data Induk
+        $openCreateModal = false;
         $dataInduk = null;
 
-        if ($dataIndukId) {
-            $dataInduk = DataInduk::findOrFail($dataIndukId);
+        if ($request->has('data_induk_id')) {
+            $openCreateModal = true;
+            $dataInduk = DataInduk::find($request->data_induk_id);
         }
 
-        return view('pages.resign_form', compact('dataInduk'));
+        return view('pages.resign', [
+            'resign' => $resign,
+            'openCreateModal' => $openCreateModal,
+            'dataInduk' => $dataInduk
+        ]);
     }
-
-    // ======================
-    //  SIMPAN RESIGN
-    // ======================
+  // =========================
+//  CREATE (REDIRECT KE INDEX)
+// =========================
+public function create(Request $request)
+{
+    return redirect()->route('resign.index', [
+        'data_induk_id' => $request->data_induk_id
+    ]);
+}
+    // =========================
+    //  STORE (TAMBAH RESIGN)
+    // =========================
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -61,28 +67,40 @@ class ResignController extends Controller
         ]);
 
         try {
-            // Simpan ke tabel resign
+            // Simpan resign
             $resign = Resign::create($validated);
 
-            // Jika berasal dari Data Induk → Update Status Pegawai
+            // Jika resign berasal dari Data Induk
             if (!empty($validated['data_induk_id'])) {
-                DataInduk::where('id', $validated['data_induk_id'])
-                    ->update(['status_pegawai' => 'resign']);
+
+                $dataInduk = DataInduk::find($validated['data_induk_id']);
+
+                // Update status pegawai menjadi resign
+                $dataInduk->update([
+                    'status_pegawai' => 'resign'
+                ]);
+
+                // Update staff jika ada relasi staff
+                if ($dataInduk->staff) {
+                    $dataInduk->staff->update([
+                        'statusPegawai' => 'resign'
+                    ]);
+                }
             }
 
             return redirect()
                 ->route('resign.index')
                 ->with('success', 'Data resign berhasil ditambahkan.');
+
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
+            return redirect()->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    // ======================
-    //  UPDATE DATA RESIGN
-    // ======================
+    // =========================
+    //  UPDATE RESIGN
+    // =========================
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -110,33 +128,38 @@ class ResignController extends Controller
             $resign = Resign::findOrFail($id);
             $resign->update($validated);
 
-            return redirect()
-                ->back()
-                ->with('success', 'Data resign berhasil diubah.');
+            return back()->with('success', 'Data resign berhasil diubah.');
+
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'Data resign gagal diubah.');
+            return back()->with('error', 'Data resign gagal diubah.');
         }
     }
 
-    // ======================
-    //  HAPUS DATA RESIGN
-    // ======================
+    // =========================
+    //  DELETE RESIGN
+    // =========================
     public function destroy($id)
     {
         try {
             $resign = Resign::findOrFail($id);
+
+            // Jika resign dihapus → status pegawai kembali aktif
+            if ($resign->data_induk_id) {
+                DataInduk::where('id', $resign->data_induk_id)
+                    ->update(['status_pegawai' => 'aktif']);
+            }
+
             $resign->delete();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data resign berhasil dihapus.',
+                'message' => 'Data resign berhasil dihapus.'
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data resign gagal dihapus.',
+                'message' => 'Data resign gagal dihapus.'
             ], 500);
         }
     }

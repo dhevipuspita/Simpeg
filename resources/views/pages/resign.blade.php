@@ -6,11 +6,12 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4">Data Resign Pegawai</h4>
 
-        <div class="d-block mb-3">
-            <a href="{{ route('resign.create') }}" class="btn btn-primary">
-                <i class="ti ti-plus me-1"></i>Tambah Manual
-            </a>
-        </div>
+        
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+            <i class="ti ti-plus me-1"></i>Tambah Manual
+            </button>
+
+                
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show">
@@ -69,46 +70,260 @@
                             </td>
                         </tr>
 
-                        {{-- Modal Info --}}
-                        <div class="modal fade" id="infoModal{{ $r->id }}" tabindex="-1" aria-labelledby="infoModal{{ $r->id }}Label" aria-hidden="true">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="infoModal{{ $r->id }}Label">Info Data Resign</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p><b>No :</b> {{ $r->no ?? '-' }}</p>
-                                                <p><b>NPA :</b> {{ $r->npa ?? '-' }}</p>
-                                                <p><b>Nama :</b> {{ $r->nama }}</p>
-                                                <p><b>NIK :</b> {{ $r->nik ?? '-' }}</p>
-                                                <p><b>Jabatan :</b> {{ $r->jabatan ?? '-' }}</p>
-                                                <p><b>Golongan :</b> {{ $r->gol ?? '-' }}</p>
-                                                <p><b>Jenjang :</b> {{ $r->jenjang ?? '-' }}</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p><b>TTL :</b> {{ $r->ttl ?? '-' }}</p>
-                                                <p><b>Pendidikan :</b> {{ $r->pendidikan ?? '-' }}</p>
-                                                <p><b>Status Kepegawaian :</b> {{ $r->status_kepegawaian ?? '-' }}</p>
-                                                <p><b>Mulai Bertugas :</b> {{ $r->mulai_bertugas ? \Carbon\Carbon::parse($r->mulai_bertugas)->format('d/m/Y') : '-' }}</p>
-                                                <p><b>Tanggal Resign :</b> {{ $r->tanggal_resign ? \Carbon\Carbon::parse($r->tanggal_resign)->format('d/m/Y') : '-' }}</p>
-                                                <p><b>No SK :</b> {{ $r->no_sk ?? '-' }}</p>
-                                                <p><b>Tanggal SK :</b> {{ $r->tgl ?? '-' }}/{{ $r->bln ?? '-' }}/{{ $r->thn ?? '-' }}</p>
-                                            </div>
-                                            <div class="col-md-12 mt-3">
-                                                <p><b>Alamat :</b> {{ $r->alamat ?? '-' }}</p>
-                                                <p><b>Alasan Resign :</b><br>{{ $r->alasan_resign ?? '-' }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
+                        {{-- Modal Tambah --}}
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <form action="{{ route('resign.store') }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Tambah Data Resign</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Mulai Bertugas</label>
+                                <input type="date" class="form-control" name="mulai_bertugas">
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">NPA</label>
+                                <input type="text" class="form-control" name="npa">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Nama <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="nama" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">NIK</label>
+                                <input type="text" class="form-control" name="nik">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Jabatan</label>
+                                <input type="text" class="form-control" name="jabatan">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Golongan</label>
+                                <input type="text" class="form-control" name="gol">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Jenjang</label>
+                                <input type="text" class="form-control" name="jenjang">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">TTL</label>
+                                <input type="text" class="form-control" name="ttl">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Pendidikan</label>
+                                <input type="text" class="form-control" name="pendidikan">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">Alamat</label>
+                                <textarea name="alamat" rows="3" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Status Kepegawaian</label>
+                                <select name="status_kepegawaian" class="form-select">
+                                    <option value="">Pilih Status</option>
+                                    <option value="PNS">PNS</option>
+                                    <option value="PPPK">PPPK</option>
+                                    <option value="Honorer">Honorer</option>
+                                    <option value="Kontrak">Kontrak</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Tanggal Resign</label>
+                                <input type="date" class="form-control" name="tanggal_resign">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">Alasan Resign</label>
+                                <textarea name="alasan_resign" rows="4" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Tanggal SK</label>
+                                <input type="number" class="form-control" name="tgl" min="1" max="31">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Bulan SK</label>
+                                <input type="number" class="form-control" name="bln" min="1" max="12">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Tahun SK</label>
+                                <input type="number" class="form-control" name="thn">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">No SK</label>
+                                <input type="text" class="form-control" name="no_sk">
+                            </div>
+                        </div>
+
+                    </div> {{-- row --}}
+                </div> {{-- modal-body --}}
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+                        {{-- Modal Info --}}
+                        <!-- Modal Tambah Resign -->
+<div class="modal fade" id="modalTambahResign" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Tambah Data Resign Pegawai</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="{{ route('resign.store') }}" method="POST">
+                @csrf
+
+                <div class="modal-body">
+
+                    <!-- Jika datang dari Data Induk -->
+                    @if(isset($data))
+                        <input type="hidden" name="data_induk_id" value="{{ $data->id }}">
+
+                        <div class="alert alert-info">
+                            <strong>Resign Dari Data Induk:</strong><br>
+                            Nama: <b>{{ $data->nama }}</b><br>
+                            Jabatan: <b>{{ $data->jabatan }}</b><br>
+                            Jenjang: <b>{{ $data->jenjang }}</b>
+                        </div>
+                    @endif
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label class="form-label">Nama Pegawai</label>
+                            <input type="text" name="nama" class="form-control"
+                                   value="{{ $data->nama ?? '' }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">NPA</label>
+                            <input type="text" name="npa" class="form-control"
+                                   value="{{ $data->npa ?? '' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Jabatan</label>
+                            <input type="text" name="jabatan" class="form-control"
+                                   value="{{ $data->jabatan ?? '' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Jenjang</label>
+                            <input type="text" name="jenjang" class="form-control"
+                                   value="{{ $data->jenjang ?? '' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Golongan</label>
+                            <input type="text" name="gol" class="form-control"
+                                   value="{{ $data->gol ?? '' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Tanggal Mulai Bertugas</label>
+                            <input type="date" name="mulai_bertugas" class="form-control"
+                                   value="{{ $data->mulai_bertugas ?? '' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Tanggal Resign</label>
+                            <input type="date" name="tanggal_resign" class="form-control" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Alasan Resign</label>
+                            <textarea name="alasan_resign" class="form-control" rows="3"></textarea>
+                        </div>
+
+                    </div><!-- row -->
+
+                </div><!-- modal-body -->
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-danger">Simpan Resign</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Auto Open Modal Jika Dari Data Induk -->
+@if(isset($open_create_modal) && $open_create_modal)
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var modal = new bootstrap.Modal(document.getElementById('modalTambahResign'));
+        modal.show();
+    });
+</script>
+@endif
+
 
                         {{-- Modal Edit --}}
                         <div class="modal fade" id="updateModal{{ $r->id }}" tabindex="-1" aria-labelledby="updateModal{{ $r->id }}Label" aria-hidden="true">
@@ -123,12 +338,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">No</label>
-                                                        <input type="number" class="form-control" name="no" value="{{ $r->no }}">
-                                                    </div>
-                                                </div>
+                                                
                                                 <div class="col-md-4">
                                                     <div class="mb-3">
                                                         <label class="form-label">Mulai Bertugas</label>
@@ -161,7 +371,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Gol</label>
+                                                        <label class="form-label">Golongan</label>
                                                         <input type="text" class="form-control" name="gol" value="{{ $r->gol }}">
                                                     </div>
                                                 </div>

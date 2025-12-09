@@ -33,16 +33,17 @@
                     <div>Sistem</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item {{ Route::currentRouteName() == 'staff.index' ? 'active' : '' }}">
-                        <a href="{{ route('staff.index') }}" class="menu-link">
-                            <div>Data Diri Staff</div>
-                        </a>
-                    </li>
                     <li class="menu-item {{ Route::currentRouteName() == 'data-induk.index' ? 'active' : '' }}">
                         <a href="{{ route('data-induk.index') }}" class="menu-link">
                             <div>Data Induk Staff</div>
                         </a>
                     </li>
+                    <li class="menu-item {{ Route::currentRouteName() == 'staff.index' ? 'active' : '' }}">
+                        <a href="{{ route('staff.index') }}" class="menu-link">
+                            <div>Data Diri Staff</div>
+                        </a>
+                    </li>
+                    
                     <li class="menu-item">
                         <a class="menu-link">
                             <div>Riwayat Staff</div>

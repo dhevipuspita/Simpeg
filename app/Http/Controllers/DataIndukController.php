@@ -22,7 +22,8 @@ class DataIndukController extends Controller
             'mulai_bertugas'  => 'nullable|date',
             'npa'             => 'nullable|string|max:255',
             'nama'            => 'required|string|max:255',
-            'jenjang_jabatan' => 'nullable|string|max:255',
+            'jenjang'         => 'nullable|string|max:255',
+            'jabatan'         => 'nullable|string|max:225',
             'gol'             => 'nullable|string|max:50',
             'status'          => 'nullable|string|max:50',
         ]);
@@ -43,7 +44,8 @@ class DataIndukController extends Controller
             'mulai_bertugas'  => 'nullable|date',
             'npa'             => 'nullable|string|max:255',
             'nama'            => 'required|string|max:255',
-            'jenjang_jabatan' => 'nullable|string|max:255',
+            'jenjang'         => 'nullable|string|max:255',
+            'jabatan'         => 'nullable|string|max:225',
             'gol'             => 'nullable|string|max:50',
             'status'          => 'nullable|string|max:50',
         ]);
