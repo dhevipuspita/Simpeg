@@ -7,7 +7,6 @@ use App\Models\Riwayat;
 use App\Models\RiwayatGolongan;
 use Illuminate\Http\Request;
 
-// return view('pages.system.riwayat_gol', compact('riwayat', 'jenis_golongan'));
 
 class RiwayatGolonganController extends Controller
 {

@@ -1,13 +1,13 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     {{-- Row kartu ringkasan --}}
     <div class="row g-4 mb-4">
-        {{-- Total Staff --}}
+        {{-- Total Pegawai --}}
         <div class="col-sm-6 col-xl-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <div class="content-left">
-                            <span>Staff</span>
+                            <span>Pegawai</span>
                             <div class="d-flex align-items-center my-1">
                                 <h4 class="mb-0 me-2">{{ $countStaff }}</h4>
                             </div>
@@ -21,15 +21,54 @@
             </div>
         </div>
 
-        {{-- Staff Keluar --}}
         <div class="col-sm-6 col-xl-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <div class="content-left">
-                            <span>Staff Izin </span>
+                            <span>Jenjang</span>
+                            <div class="d-flex align-items-center my-1">
+                                <h4 class="mb-0 me-2">{{ $countJenjang }}</h4>
+                            </div>
+                            <span>Total Jenjang </span>
+                        </div>
+                        <span class="badge bg-label-primary rounded p-2">
+                            <i class="ti ti-user ti-sm"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Pegawai Keluar --}}
+        <div class="col-sm-6 col-xl-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span>Pegawai Resign </span>
                             <div class="d-flex align-items-center my-1">
                                 <h4 class="mb-0 me-2">{{ $staffKeluar }}</h4>
+                            </div>
+                            <span>Total Pegawai yang Resign </span>
+                        </div>
+                        <span class="badge bg-label-danger rounded p-2">
+                            <i class="ti ti-user-minus ti-sm"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Pegawai Izin --}}
+        <div class="col-sm-6 col-xl-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span>Pegawai Izin </span>
+                            <div class="d-flex align-items-center my-1">
+                                <h4 class="mb-0 me-2">{{ $staffIzin }}</h4>
                             </div>
                             <span>Perizinan aktif (belum kembali)</span>
                         </div>
@@ -47,7 +86,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between">
                         <div class="content-left">
-                            <span>Staff Kembali</span>
+                            <span>Pegawai Kembali</span>
                             <div class="d-flex align-items-center my-1">
                                 <h4 class="mb-0 me-2">{{ $staffKembali }}</h4>
                             </div>

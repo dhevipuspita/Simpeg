@@ -17,7 +17,7 @@ class JenjangController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_jenjang' => 'nullable|string|max:255',
+            'nama_jenjang' => 'required|string|max:255',
         ]);
         try {
             Jenjang::create($validated);
@@ -34,7 +34,7 @@ class JenjangController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nama_jenjang' => 'nullable|string|max:255',
+            'nama_jenjang' => 'required|string|max:255',
         ]);
 
         try {

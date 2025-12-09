@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Riwayat Golongan Pegawai')
+@section('title', 'Riwayat Jabatan Pegawai')
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="fw-bold mb-0">Riwayat Golongan Pegawai</h4>
+            <h4 class="fw-bold mb-0">Riwayat Jabatan Pegawai</h4>
             {{-- kembali ke daftar riwayat --}}
             <a href="{{ route('riwayat.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
         </div>
 
-        {{-- CARD DATA RIWAYAT GOLONGAN --}}
+        {{-- CARD DATA RIWAYAT PEGAWAI --}}
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">Data Riwayat Pegawai</h5>
@@ -43,10 +43,10 @@
         {{-- Tabel --}}
         <div class="card">
             <div class="card-header flex-grow-1">
-                <h5 lass="fw-bold py-3 mb-4">Riwayat Golongan Pegawai</h5>
+                <h5 lass="fw-bold py-3 mb-4">Riwayat Jabatan Pegawai</h5>
                 <div class="d-block">
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahRiwayatModal">
-                    Tambah Riwayat Golongan
+                    Tambah Riwayat Jabatan
                 </button>
                 </div>
             </div>
@@ -56,29 +56,27 @@
                         <thead>
                             <tr class="text-center">
                                 <th class="text-center" style="width: 60px;">No</th>
-                                <th class="text-center">Jenis Golongan</th>
+                                <th class="text-center">Nama Jabatan</th>
                                 <th class="text-center">Tanggal</th>
                                 <th class="text-center" style="width: 160px;">Action</th>
                             </tr>
                         </thead>
                             <tbody>
-                                @foreach ($riwayat->riwayatGolongan as $item)
+                                @foreach ($riwayat->riwayatJabatan as $item)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td class="text-center">
-                                             {{ $item->jenisGolongan->jenis ?? '-' }}
-                                        </td>
+                                        <td class="text-center">{{ $item->nama_jabatan }}</td>
                                         <td class="text-center">
                                             {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-warning btn-sm"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#editRiwayatModal{{ $item->riwayat_gol_id }}">
+                                                data-bs-target="#editRiwayatModal{{ $item->riwayat_jabatan_id }}">
                                                 Edit
                                             </button>
-                                            <button class="btn btn-danger btn-delete-riwayat-gol btn-sm"
-                                                data-id="{{ $item->riwayat_gol_id }}">
+                                            <button class="btn btn-danger btn-delete-riwayat-jabatan btn-sm"
+                                                data-id="{{ $item->riwayat_jabatan_id }}">
                                                 Hapus
                                             </button>
                                         </td>
@@ -95,10 +93,10 @@
              aria-labelledby="tambahRiwayatModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('riwayat_gol.store') }}" method="POST">
+                    <form action="{{ route('riwayat_jabatan.store') }}" method="POST">
                         @csrf
                         <div class="modal-header">
-                            <h5 class="modal-title" id="tambahRiwayatModalLabel">Tambah Riwayat Golongan</h5>
+                            <h5 class="modal-title" id="tambahRiwayatModalLabel">Tambah Riwayat Jabatan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
@@ -107,16 +105,9 @@
                             <input type="hidden" name="riwayatId" value="{{ $riwayat->riwayatId }}">
 
                             <div class="mb-3">
-                                <label class="form-label">Jenis Golongan</label>
-                                <select name="jenis_golongan" class="form-control" required>
-                                    <option value="">-- Pilih Jenis Golongan --</option>
-                                    @foreach ($jenis_golongan as $jg)
-                                        <option value="{{ $jg->jenisId }}"
-                                            {{ $jg->jenisId == old('jenis_golongan') ? 'selected' : '' }}>
-                                            {{ $jg->jenis }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label">Nama Jabatan</label>
+                                <input type="text" class="form-control" name="nama_jabatan" placeholder="Nama Jabatan"
+                                       value="{{ old('nama_jabatan') }}">
                             </div>
 
                             <div class="mb-3">
@@ -136,19 +127,19 @@
         </div>
 
         {{-- Modal Edit --}}
-        @foreach ($riwayat->riwayatGolongan as $item)
-            <div class="modal fade" id="editRiwayatModal{{ $item->riwayat_gol_id }}" tabindex="-1"
-                 aria-labelledby="editRiwayatModalLabel{{ $item->riwayat_gol_id }}"
+        @foreach ($riwayat->riwayatJabatan as $item)
+            <div class="modal fade" id="editRiwayatModal{{ $item->riwayat_jabatan_id }}" tabindex="-1"
+                 aria-labelledby="editRiwayatModalLabel{{ $item->riwayat_jabatan_id }}"
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="{{ route('riwayat_gol.update', $item->riwayat_gol_id) }}" method="POST">
+                        <form action="{{ route('riwayat_jabatan.update', $item->riwayat_jabatan_id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="modal-header">
                                 <h5 class="modal-title"
-                                    id="editRiwayatModalLabel{{ $item->riwayat_gol_id }}">
-                                    Edit Riwayat Golongan
+                                    id="editRiwayatModalLabel{{ $item->riwayat_jabatan_id }}">
+                                    Edit Riwayat Jabatan
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
@@ -158,18 +149,10 @@
                                 <input type="hidden" name="riwayatId" value="{{ $riwayat->riwayatId }}">
 
                                 <div class="mb-3">
-                                    <label class="form-label">Jenis Golongan</label>
-                                    <select name="jenis_golongan" class="form-control" required>
-                                        <option value="">-- Pilih Jenis Golongan --</option>
-                                        @foreach ($jenis_golongan as $jg)
-                                            <option value="{{ $jg->jenisId }}"
-                                                {{ $jg->jenisId == old('jenis_golongan', $item->jenis_golongan) ? 'selected' : '' }}>
-                                                {{ $jg->jenis }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Nama Jabatan</label>
+                                    <input type="text" class="form-control" name="nama_jabatan" placeholder="Nama Jabatan"
+                                        value="{{ old('nama_jabatan', $item->nama_jabatan) }}">
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="form-label">Tanggal</label>
                                     <input type="date" name="tanggal" class="form-control"
@@ -194,7 +177,7 @@
 
 @push('scripts')
 <script>
-    $(document).on('click', '.btn-delete-riwayat-gol', function() {
+    $(document).on('click', '.btn-delete-riwayat-jabatan', function() {
         let id = $(this).data('id');
 
         Swal.fire({
@@ -208,7 +191,7 @@
             if (result.isConfirmed) {
 
                 $.ajax({
-                    url: "/riwayat_gol/" + id,
+                    url: "/riwayat_jabatan/" + id,
                     type: 'POST',
                     data: {
                         _token: "{{ csrf_token() }}",

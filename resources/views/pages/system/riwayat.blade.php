@@ -79,7 +79,14 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Golongan</label>
-                                    <input type="text" class="form-control" name="golongan">
+                                    <select name="golongan" class="form-control" required>
+                                        @foreach ($jenis_golongan as $jg)
+                                            <option value="{{ $jg->jenisId }}"
+                                                {{ $jg->jenisId == old('jenis_golongan') ? 'selected' : '' }}>
+                                                {{ $jg->jenis }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 
@@ -162,16 +169,32 @@
                     <td>{{ $r->pendidikan ?? '-' }}</td>
                     <td>{{ $r->instansi ?? '-' }}</td>
                     <td>{{ $r->tmt_awal ?? '-' }}</td>
-                    <td>{{ $r->golongan ?? '-' }}</td>
-                    <td>{{ $r->tmt_kini ?? '-' }}</td>
+                    @php
+                        $latestGol = $r->latestRiwayatGolongan;
+                    @endphp
                     <td>
-                        <a href="{{ route('riwayat.golongan', $r->riwayatId) }}" class="btn btn-sm btn-warning">
+                        {{ $latestGol?->jenisGolongan?->jenis 
+                            ?? $r->jenisGolongan?->jenis 
+                            ?? '-' }}
+                    </td>
+                    <td>
+                        @if ($latestGol?->tanggal)
+                            {{ \Carbon\Carbon::parse($latestGol->tanggal)->translatedFormat('d F Y') }}
+                        @elseif ($r->tmt_kini)
+                            {{ \Carbon\Carbon::parse($r->tmt_kini)->translatedFormat('d F Y') }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        {{-- di route riwayat --}}
+                        <a href="{{ route('riwayat.golongan', $r->riwayatId) }}" class="btn btn-sm btn-warning"> 
                             Selengkapnya
                         </a>
                     </td>
                     <td>
                         @if ($r->riwayat_jabatan == 1)
-                            <a href="{{ route('riwayat_gol.index', $r->staffId) }}" class="btn btn-sm btn-info">
+                            <a href="{{ route('riwayat.jabatan', $r->riwayatId) }}" class="btn btn-sm btn-info">
                                 Selengkapnya
                             </a>
                         @else
@@ -293,8 +316,15 @@
                                         {{-- Golongan --}}
                                         <div class="col-md-6 mb-3">
                                             <label>Golongan</label>
-                                            <input type="text" class="form-control" name="golongan"
-                                                value="{{ $r->golongan }}">
+                                            <select name="golongan" class="form-control" required>
+                                                <option value="">-- Pilih Jenis Golongan --</option>
+                                                @foreach ($jenis_golongan as $jg)
+                                                    <option value="{{ $jg->jenisId }}"
+                                                        {{ $jg->jenisId == old('golongan', $r->golongan) ? 'selected' : '' }}>
+                                                        {{ $jg->jenis }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
 
                                         {{-- TMT Golongan (tmt_kini) --}}

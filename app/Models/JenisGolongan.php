@@ -12,6 +12,6 @@ class JenisGolongan extends Model
     protected $table = 'jenis_golongan';
     protected $primaryKey = 'jenisId';
     protected $fillable = [
-        'jenis', "created_at", "updated_at",
+        'jenis',
     ];
 }

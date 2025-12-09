@@ -11,10 +11,15 @@ class RiwayatController extends Controller
 {
     public function index()
     {
-        $riwayat = Riwayat::with('staff')->get(); 
-        $staff   = Staff::all();                 
+        $riwayat = Riwayat::with([
+            'staff',
+            'jenisGolongan', 
+            'latestRiwayatGolongan.jenisGolongan',
+        ])->get();
+        $staff          = Staff::orderBy('name')->get();
+        $jenis_golongan = JenisGolongan::orderBy('jenis', 'asc')->get();
 
-        return view('pages.system.riwayat', compact('riwayat', 'staff'));
+        return view('pages.system.riwayat', compact('riwayat', 'staff', 'jenis_golongan'));
     }
 
 
@@ -25,7 +30,7 @@ class RiwayatController extends Controller
             'pendidikan' => 'nullable|string|max:255',
             'instansi' => 'nullable|string|max:255',
             'tmt_awal' => 'nullable|date',
-            'golongan' => 'nullable|string|max:100',
+            'golongan' => 'nullable|exists:jenis_golongan,jenisId',
             'tmt_kini' => 'nullable|date',
             'riwayat_gol' => 'nullable|string|max:255',
             'riwayat_jabatan' => 'nullable|string|max:255',
@@ -50,7 +55,7 @@ class RiwayatController extends Controller
             'staffId' => 'required|exists:staff,staffId',
             'pendidikan' => 'nullable|string|max:255',
             'instansi' => 'nullable|string|max:255',
-            'golongan' => 'nullable|string|max:100',
+            'golongan' => 'nullable|exists:jenis_golongan,jenisId',
             'tmt_golongan' => 'nullable|date',
             'tmt_awal' => 'nullable|date',
             'status' => 'nullable|string|max:100',
@@ -92,12 +97,23 @@ class RiwayatController extends Controller
     }
     public function show($id)
     {
-        $riwayat = Riwayat::with(['staff', 'riwayatGolongan'])
-            ->findOrFail($id); 
-        
+        $riwayat = Riwayat::with([
+                'staff',
+                'riwayatGolongan.jenisGolongan',
+            ])
+            ->findOrFail($id);
+
         $jenis_golongan = JenisGolongan::orderBy('jenis', 'asc')->get();
 
         return view('pages.system.riwayat_gol', compact('riwayat', 'jenis_golongan'));
+    }
+
+    public function show2($id)
+    {
+        $riwayat = Riwayat::with(['staff', 'riwayatJabatan'])
+            ->findOrFail($id); 
+
+        return view('pages.system.riwayat_jabatan', compact('riwayat'));
     }
 
 }

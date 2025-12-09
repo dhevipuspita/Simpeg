@@ -24,7 +24,6 @@
                 <div>Dashboard</div>
             </a>
         </li>
-
         @if (Auth::user()->roleId == 1)
             <li
                 class="menu-item {{ Route::currentRouteName() == 'guru.index' || Route::currentRouteName() == 'pengurus.index' || Route::currentRouteName() == 'santri.index' || Route::currentRouteName() == 'inputMatpelSantri.index' ? 'open' : '' }}">
@@ -33,14 +32,14 @@
                     <div>Sistem</div>
                 </a>
                 <ul class="menu-sub">
+                    <li class="menu-item {{ Route::currentRouteName() == 'data-induk.index' ? 'active' : '' }}">
+                        <a href="{{ route('data-induk.index') }}" class="menu-link">
+                            <div>Data Induk Pegawai</div>
+                        </a>
+                    </li>
                     <li class="menu-item {{ Route::currentRouteName() == 'staff.index' ? 'active' : '' }}">
                         <a href="{{ route('staff.index') }}" class="menu-link">
                             <div>Data Diri Pegawai</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ Route::currentRouteName() == 'data-induk.index' ? 'active' : '' }}">
-                        <a href="{{ route('data-induk.index') }}" class="menu-link">
-                            <div>Data Induk Staff</div>
                         </a>
                     </li>
                     <li class="menu-item {{ Route::currentRouteName() == 'riwayat.index' ? 'active' : '' }}">
@@ -81,12 +80,18 @@
                 </a>
             </li>
         @endif
-      <li class="menu-item {{ Route::currentRouteName() == 'resign.index' ? 'active' : '' }}">
-    <a href="{{ route('resign.index') }}" class="menu-link">
-        <i class="menu-icon tf-icons ti ti-user-x"></i>
-        <div>Resign</div>
-    </a>
-</li>
+        <li class="menu-item {{ Route::currentRouteName() == 'resign.index' ? 'active' : '' }}">
+            <a href="{{ route('resign.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-user-x"></i>
+                <div>Resign</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-file-export"></i>
+                <div>Export Biodata</div>
+            </a>
+        </li>
         <li class="menu-item {{ Route::currentRouteName() == 'profile.index' ? 'active' : '' }}">
             <a href="{{ route('profile.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-user"></i>

@@ -13,6 +13,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\JenjangController;
 use App\Http\Controllers\ResignController;
+use App\Http\Controllers\RiwayatJabatanController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -75,6 +76,7 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::put("/{id}", [RiwayatController::class, 'update'])->name('riwayat.update');
         Route::delete("/{id}", [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
         Route::get('/{id}/golongan', [RiwayatController::class, 'show'])->name('riwayat.golongan');
+        Route::get('/{id}/jabatan', [RiwayatController::class, 'show2'])->name('riwayat.jabatan');
     });
 
     Route::prefix("riwayat_gol")->middleware('role:Admin')->group(function () {
@@ -84,6 +86,15 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::post("/import", [RiwayatGolonganController::class, 'import'])->name('riwayat_gol.import');
         Route::put("/{id}", [RiwayatGolonganController::class, 'update'])->name('riwayat_gol.update');
         Route::delete("/{id}", [RiwayatGolonganController::class, 'destroy'])->name('riwayat_gol.destroy');
+    });
+
+    Route::prefix("riwayat_jabatan")->middleware('role:Admin')->group(function () {
+        Route::get('/', [RiwayatJabatanController::class, 'index'])->name('riwayat_jabatan.index');
+        Route::get("/template", [RiwayatJabatanController::class, 'template'])->name('riwayat_jabatan.template');
+        Route::post('/', [RiwayatJabatanController::class, 'store'])->name('riwayat_jabatan.store');
+        Route::post("/import", [RiwayatJabatanController::class, 'import'])->name('riwayat_jabatan.import');
+        Route::put("/{id}", [RiwayatJabatanController::class, 'update'])->name('riwayat_jabatan.update');
+        Route::delete("/{id}", [RiwayatJabatanController::class, 'destroy'])->name('riwayat_jabatan.destroy');
     });
     
     Route::prefix("jenis")->middleware("role:Admin")->group(function () {

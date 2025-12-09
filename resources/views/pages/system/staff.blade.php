@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Data Diri Staff')
+@section('title', 'Data Diri Pegawai')
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4">Data Diri Staff</h4>
+        <h4 class="fw-bold py-3 mb-4">Data Diri Pegawai</h4>
 
         <div class="d-block mb-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
