@@ -30,5 +30,10 @@ class Staff extends Model
     {
         return $this->hasMany(Permission::class, "staffId", "staffId");
     }
+    public function dataInduk()
+    {
+    return $this->belongsTo(DataInduk::class, 'dataIndukId');
+    }
+
 
 }
