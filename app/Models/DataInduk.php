@@ -13,11 +13,12 @@ class DataInduk extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
-        "no",
+        
         "mulai_bertugas",
         "npa",
         "nama",
-        "jenjang_jabatan",
+        "jenjang",
+        "jabatan",
         "gol",
         "status",
         "status_pegawai", // WAJIB! Agar bisa berubah jadi 'resign'
@@ -27,4 +28,9 @@ class DataInduk extends Model
     {
         return $this->hasOne(Resign::class, 'data_induk_id');
     }
+    public function staff()
+    {
+    return $this->hasOne(Staff::class, 'dataIndukId');
+    }
+
 }

@@ -12,9 +12,9 @@
         </button>
     </div>
 
-    {{-- Modal Tambah --}}
-    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+            {{-- Modal Tambah --}}
+            <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="{{ route('data-induk.store') }}" method="POST">
                     @csrf
@@ -22,15 +22,12 @@
                         <h5 class="modal-title" id="tambahModalLabel">Tambah Data Induk</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
+            
 
                     <div class="modal-body">
                         <div class="row">
 
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">No</label>
-                                <input type="number" name="no" class="form-control">
-                            </div>
-
+                            
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Mulai Bertugas</label>
                                 <input type="date" name="mulai_bertugas" class="form-control">
@@ -47,8 +44,13 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Jenjang Jabatan</label>
-                                <input type="text" name="jenjang_jabatan" class="form-control">
+                                <label class="form-label">Jenjang</label>
+                                <input type="text" name="jenjang" class="form-control">
+                            </div>
+
+                             <div class="col-md-6 mb-3">
+                                <label class="form-label">Jabatan</label>
+                                <input type="text" name="jabatan" class="form-control">
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -60,8 +62,13 @@
                                 <label class="form-label">Status</label>
                                 <select class="form-select" name="status">
                                     <option value="" hidden>Pilih Status</option>
-                                    <option value="Aktif">Aktif</option>
-                                    <option value="Tidak Aktif">Tidak Aktif</option>
+                                    <option value="Aktif">Tetap</option>
+                                    <option value="Tidak Aktif">KTK</option>
+                                    <option value="Aktif">KHS</option>
+                                    <option value="Aktif">PKDWT</option>
+                                    <option value="Aktif">MGG</option>
+                                    <option value="Aktif">HR</option>
+                                    <option value="Aktif">TAKHFIZ</option>
                                 </select>
                             </div>
 
@@ -78,6 +85,8 @@
         </div>
     </div>
 
+    
+
     {{-- Tabel --}}
     <div class="table-responsive">
         <table class="table" id="table">
@@ -87,7 +96,8 @@
                     <th>Mulai Bertugas</th>
                     <th>NPA</th>
                     <th>Nama</th>
-                    <th>Jenjang Jabatan</th>
+                    <th>Jenjang</th>
+                    <th>Jabatan</th>
                     <th>Gol</th>
                     <th>Status</th>
                     <th>Status Pegawai</th>
@@ -101,11 +111,12 @@
                 {{-- ROW merah jika resign --}}
                 <tr class="{{ $d->status_pegawai == 'resign' ? 'table-danger' : '' }}">
 
-                    <td>{{ $d->no }}</td>
+                    <td>{{ $loop->iteration }}</td> {{-- NOMOR OTOMATIS --}}
                     <td>{{ $d->mulai_bertugas }}</td>
                     <td>{{ $d->npa }}</td>
                     <td>{{ $d->nama }}</td>
-                    <td>{{ $d->jenjang_jabatan ?? '-' }}</td>
+                    <td>{{ $d->jenjang?? '-' }}</td>
+                    <td>{{ $d->jabatan ?? '-' }}</td>
                     <td>{{ $d->gol ?? '-' }}</td>
                     <td>{{ $d->status ?? '-' }}</td>
 
@@ -127,11 +138,16 @@
                                 <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal{{ $d->id }}">
                                     <i class="ti ti-pencil me-1"></i>Edit
                                 </button>
+                                {{-- cuti --}}
+                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal{{ $d->id }}">
+                                    <i class="ti ti-pencil me-1"></i>Cuti
+                                </button>
 
                                 {{-- Resign --}}
                                 <a class="dropdown-item" href="{{ route('resign.create', ['data_induk_id' => $d->id]) }}">
-                                    <i class="ti ti-user-x me-1"></i>Resign
+                                <i class="ti ti-user-x me-1"></i>Resign
                                 </a>
+
 
                                 {{-- Hapus --}}
                                 <button class="dropdown-item delete-data-induk" data-id="{{ $d->id }}">
@@ -158,10 +174,7 @@
 
                                 <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <label>No</label>
-                                            <input type="number" name="no" class="form-control" value="{{ $d->no }}">
-                                        </div>
+                                        
 
                                         <div class="col-md-4 mb-3">
                                             <label>Mulai Bertugas</label>
@@ -179,8 +192,13 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Jenjang Jabatan</label>
-                                            <input type="text" name="jenjang_jabatan" class="form-control" value="{{ $d->jenjang_jabatan }}">
+                                            <label>Jenjang</label>
+                                            <input type="text" name="jenjang" class="form-control" value="{{ $d->jenjang_jabatan }}">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Jabatan</label>
+                                            <input type="text" name="jabatan" class="form-control" value="{{ $d->jenjang_jabatan }}">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -189,7 +207,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Status</label>
+                                            <label>Status Kepegawaian</label>
                                             <select name="status" class="form-select">
                                                 <option value="Aktif" {{ $d->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
                                                 <option value="Tidak Aktif" {{ $d->status == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>

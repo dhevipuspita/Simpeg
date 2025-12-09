@@ -151,18 +151,40 @@
                         <th>Tempat Lahir</th>
                         <th>Tanggal Lahir</th>
                         <th>Status Perkawinan</th>
+                        <th>Nama Suami/Istri</th>
+                        <th>Email</th>
+                        <th>Status Pegawai</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
                     @foreach ($staff as $key => $s)
-                        <tr>
+                        @php
+                            // Cek apakah nama staff ada di data_induk dengan status resign
+                            $isResign = \App\Models\DataInduk::where('nama', $s->name)
+                                        ->where('status_pegawai', 'resign')
+                                        ->exists();
+                        @endphp
+                        
+                        <tr class="{{ $isResign ? 'table-danger' : '' }}">
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ $s->name }}</td>
+                            <td>
+                                {{ $s->name }}
+                                @if($isResign)
+                                    
+                                @endif
+                            </td>
                             <td>{{ $s->nik ?? '-' }}</td>
                             <td>{{ $s->birthPlace ?? '-' }}</td>
                             <td>{{ $s->birthDate ?? '-' }}</td>
                             <td>{{ $s->statusPerkawinan ?? '-' }}</td>
+                            <td>
+                                @if($isResign)
+                                    <span class="badge bg-danger">Resign</span>
+                                @else
+                                    <span class="badge bg-success">Aktif</span>
+                                @endif
+                            </td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -206,6 +228,11 @@
                                         <p><b>Alamat :</b> {{ $s->alamat ?? '-' }}</p>
                                         <p><b>No HP :</b> {{ $s->noHp ?? '-' }}</p>
                                         <p><b>Email :</b> {{ $s->email ?? '-' }}</p>
+                                        @if($isResign)
+                                            <p><b>Status Pegawai :</b> <span class="badge bg-danger">Resign</span></p>
+                                        @else
+                                            <p><b>Status Pegawai :</b> <span class="badge bg-success">Aktif</span></p>
+                                        @endif
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
