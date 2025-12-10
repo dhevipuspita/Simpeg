@@ -13,7 +13,10 @@ class DataIndukController extends Controller
     // Tampilkan semua data induk
     public function index()
     {
-        $dataInduk = DataInduk::all();
+        $dataInduk = DataInduk::with('staff')   // <-- penting
+        ->orderBy('nama')
+        ->get();
+
         return view('pages.system.data_induk', compact('dataInduk'));
     }
 

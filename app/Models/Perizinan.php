@@ -13,25 +13,22 @@ class Perizinan extends Model
     protected $table = 'perizinan';
     protected $primaryKey = "perizinanId";
 
-    protected $fillable = [
-        "tglSurat",
-        "staffId",
-        "name",
-        "nik",
-        "npa",
-        "birthPlace",
-        "birthDate",
-        "alamat",
-        "jenjang",
-        "jabatan",
-        "tglMulai",
-        "tglAkhir",
-        "lamaCuti",
-        "alasan",
-        "isComback",
+     protected $fillable = [
+        'staffId',
+        'data_induk_id',
+        'tglSurat',
+        'mulai_tanggal',
+        'akhir_tanggal',
+        'lamaCuti',
+        'alasan',
+        'isComback',
     ];
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class, "staffId", "staffId");
+    }
+    public function dataInduk()
+    {
+        return $this->belongsTo(DataInduk::class, 'data_induk_id', 'id');
     }
 }

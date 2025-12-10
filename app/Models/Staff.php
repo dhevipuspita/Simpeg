@@ -28,12 +28,11 @@ class Staff extends Model
 
     public function permissions(): HasMany
     {
-        return $this->hasMany(Permission::class, "staffId", "staffId");
+        return $this->hasMany(Perizinan::class, "staffId", "staffId");
     }
     public function dataInduk()
     {
-    return $this->belongsTo(DataInduk::class, 'dataIndukId');
+        return $this->belongsTo(DataInduk::class, 'dataIndukId', 'id');
     }
-
 
 }

@@ -27,20 +27,20 @@
                             <div class="mb-3">
                                 
                                 <div class="mb-3 position-relative">
-    <label class="form-label">Nama Pegawai</label>
+                                <label class="form-label">Nama Pegawai</label>
 
-    <!-- Input yang bisa diketik -->
-    <input type="text" id="searchPegawai" class="form-control" placeholder="Ketik nama...">
+                                <!-- Input yang bisa diketik -->
+                                <input type="text" id="searchPegawai" class="form-control" placeholder="Ketik nama...">
 
-    <!-- Simpan ID ke hidden input -->
-    <input type="hidden" name="data_induk_id" id="dataIndukId" required>
+                                <!-- Simpan ID ke hidden input -->
+                                <input type="hidden" name="data_induk_id" id="dataIndukId" required>
 
-    <!-- Tempat munculnya list hasil pencarian -->
-    <div id="pegawaiList"
-         class="border bg-white w-100 d-none position-absolute"
-         style="z-index: 1000; max-height: 180px; overflow-y:auto;">
-    </div>
-</div>
+                                <!-- Tempat munculnya list hasil pencarian -->
+                                <div id="pegawaiList"
+                                    class="border bg-white w-100 d-none position-absolute"
+                                    style="z-index: 1000; max-height: 180px; overflow-y:auto;">
+                                </div>
+                            </div>
 
                             </div>
 
@@ -164,8 +164,6 @@
                         <th>Tempat Lahir</th>
                         <th>Tanggal Lahir</th>
                         <th>Status Perkawinan</th>
-                        <th>Nama Suami/Istri</th>
-                        <th>Email</th>
                         <th>Status Pegawai</th>
                         <th>Actions</th>
                     </tr>

@@ -24,13 +24,17 @@ class DataInduk extends Model
         "status_pegawai", // WAJIB! Agar bisa berubah jadi 'resign'
     ];
 
+    public function staff()
+    {
+        return $this->hasOne(Staff::class, 'dataIndukId', 'id');
+    }
+    public function perizinan()
+    {
+        return $this->hasMany(Perizinan::class, 'data_induk_id', 'id');
+    }
     public function resign()
     {
         return $this->hasOne(Resign::class, 'data_induk_id');
-    }
-    public function staff()
-    {
-    return $this->hasOne(Staff::class, 'dataIndukId');
     }
 
 }
