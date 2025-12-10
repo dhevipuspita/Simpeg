@@ -16,7 +16,7 @@ use App\Http\Controllers\RekapMandiriController;
 use App\Http\Controllers\SantriController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\DataIndukController;
-use App\Http\Controllers\StaffController;
+use App\Http\Controllers\DataPribadiController;
 use App\Http\Controllers\ResignController;
 use App\Http\Controllers\SubmissionController;
 use Illuminate\Support\Facades\Route;
@@ -115,28 +115,24 @@ Route::prefix("/")->middleware('auth')->group(function () {
         Route::put("/{id}", [PengurusController::class, 'update'])->name('pengurus.update');
         Route::delete("/{id}", [PengurusController::class, 'destroy'])->name('pengurus.destroy');
     });
-Route::prefix("data-induk")->middleware('role:Admin')->group(function () {
-    Route::get('/', [DataIndukController::class, 'index'])->name('data-induk.index');
-    Route::get("/create", [DataIndukController::class, 'create'])->name('data-induk.create');
-    Route::post('/', [DataIndukController::class, 'store'])->name('data-induk.store');
-    Route::post("/import", [DataIndukController::class, 'import'])->name('data-induk.import');
-    Route::get("/edit/{id}", [DataIndukController::class, 'edit'])->name('data-induk.edit');
-    Route::put("/{id}", [DataIndukController::class, 'update'])->name('data-induk.update');
+    Route::prefix("data-induk")->middleware('role:Admin')->group(function () {
+        Route::get('/', [DataIndukController::class, 'index'])->name('data-induk.index');
+        Route::get("/create", [DataIndukController::class, 'create'])->name('data-induk.create');
+        Route::post('/', [DataIndukController::class, 'store'])->name('data-induk.store');
+        Route::post("/import", [DataIndukController::class, 'import'])->name('data-induk.import');
+        Route::get("/edit/{id}", [DataIndukController::class, 'edit'])->name('data-induk.edit');
+        Route::put("/{id}", [DataIndukController::class, 'update'])->name('data-induk.update');
 
-    Route::delete("/{id}", [DataIndukController::class, 'destroy'])->name('data-induk.destroy');
-});
-
-
-    Route::prefix("staff")->middleware('role:Admin')->group(function () {
-        Route::get('/', [StaffController::class, 'index'])->name('staff.index');
-        Route::get("/template", [StaffController::class, 'template'])->name('staff.template');
-        Route::post('/', [StaffController::class, 'store'])->name('staff.store');
-        Route::post("/import", [StaffController::class, 'import'])->name('staff.import');
-        Route::put("/{id}", [StaffController::class, 'update'])->name('staff.update');
-        Route::delete("/{id}", [StaffController::class, 'destroy'])->name('staff.destroy');
-        
+        Route::delete("/{id}", [DataIndukController::class, 'destroy'])->name('data-induk.destroy');
     });
-    
+
+    Route::prefix("data-pribadi")->middleware('role:Admin')->group(function () {
+        Route::get('/', [DataPribadiController::class, 'index'])->name('data-pribadi.index');
+        Route::put("/{id}", [DataPribadiController::class, 'update'])->name('data-pribadi.update');
+    });
+
+
+
     Route::prefix("santri")->middleware('role:Admin')->group(function () {
         Route::get('/', [SantriController::class, 'index'])->name('santri.index');
         Route::get("/template", [SantriController::class, 'template'])->name('santri.template');
@@ -156,11 +152,11 @@ Route::prefix("data-induk")->middleware('role:Admin')->group(function () {
     });
 
     Route::prefix("resign")->middleware("role:Admin")->group(function () {
-    Route::get("/", [ResignController::class, 'index'])->name('resign.index');
-    Route::get("/create", [ResignController::class, 'create'])->name('resign.create');
-    Route::post("/", [ResignController::class, 'store'])->name('resign.store');
-    Route::put("/{id}", [ResignController::class, 'update'])->name('resign.update');
-    Route::delete("/{id}", [ResignController::class, 'destroy'])->name('resign.destroy');
+        Route::get("/", [ResignController::class, 'index'])->name('resign.index');
+        Route::get("/create", [ResignController::class, 'create'])->name('resign.create');
+        Route::post("/", [ResignController::class, 'store'])->name('resign.store');
+        Route::put("/{id}", [ResignController::class, 'update'])->name('resign.update');
+        Route::delete("/{id}", [ResignController::class, 'destroy'])->name('resign.destroy');
     });
 
     /**

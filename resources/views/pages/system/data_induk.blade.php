@@ -6,14 +6,14 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">Data Induk</h4>
 
-        <div class="d-block mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
-        </div>
+    <div class="d-block mb-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
+    </div>
 
-            {{-- Modal Tambah --}}
-            <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+    {{-- Modal Tambah --}}
+    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="{{ route('data-induk.store') }}" method="POST">
                     @csrf
@@ -21,12 +21,12 @@
                         <h5 class="modal-title" id="tambahModalLabel">Tambah Data Induk</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-            
+
 
                     <div class="modal-body">
                         <div class="row">
 
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Mulai Bertugas</label>
                                 <input type="date" name="mulai_bertugas" class="form-control">
@@ -38,8 +38,13 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nama</label>
+                                <label class="form-label">Nama <span class="text-danger">*</span></label>
                                 <input type="text" name="nama" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">NIK</label>
+                                <input type="text" name="nik" class="form-control">
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -47,7 +52,7 @@
                                 <input type="text" name="jenjang" class="form-control">
                             </div>
 
-                             <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Jabatan</label>
                                 <input type="text" name="jabatan" class="form-control">
                             </div>
@@ -71,6 +76,53 @@
                                 </select>
                             </div>
 
+                            <!-- DATA PRIBADI -->
+                            <div class="col-12">
+                                <hr>
+                                <h6>Data Pribadi</h6>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">TTL (Tempat, Tanggal Lahir)</label>
+                                <input type="text" name="ttl" class="form-control" placeholder="Jakarta, 01-01-1990">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">No HP</label>
+                                <input type="text" name="no_hp" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Status Perkawinan</label>
+                                <select name="status_perkawinan" class="form-select">
+                                    <option value="" hidden>Pilih Status</option>
+                                    <option value="Belum Kawin">Belum Kawin</option>
+                                    <option value="Kawin">Kawin</option>
+                                    <option value="Cerai Hidup">Cerai Hidup</option>
+                                    <option value="Cerai Mati">Cerai Mati</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Suami/Istri</label>
+                                <input type="text" name="suami_istri" class="form-control">
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Alamat</label>
+                                <textarea name="alamat" class="form-control" rows="2"></textarea>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control">
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <textarea name="keterangan" class="form-control" rows="2"></textarea>
+                            </div>
+
                         </div>
                     </div>
 
@@ -85,37 +137,37 @@
     </div>
 
 
-     <!-- Modal Import -->
-<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('data-induk.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Import Data Induk Pegawai</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+    <!-- Modal Import -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('data-induk.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Import Data Induk Pegawai</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-                <div class="modal-body">
-                    <label class="form-label">Pilih File (Excel)</label>
-                    <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
+                    <div class="modal-body">
+                        <label class="form-label">Pilih File (Excel)</label>
+                        <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
 
-                    <small class="text-muted d-block mt-2">
-                        Format file yang didukung: <b>.xlsx, .xls</b><br>
-                        Pastikan kolom mengikuti template.
-                    </small>
-                </div>
+                        <small class="text-muted d-block mt-2">
+                            Format file yang didukung: <b>.xlsx, .xls</b><br>
+                            Pastikan kolom mengikuti template.
+                        </small>
+                    </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Import</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-    
+
 
     {{-- Tabel --}}
     <div class="table-responsive">
@@ -152,9 +204,9 @@
 
                     <td>
                         @if ($d->status_pegawai == 'resign')
-                            <span class="badge bg-danger">Resign</span>
+                        <span class="badge bg-danger">Resign</span>
                         @else
-                            <span class="badge bg-success">Aktif</span>
+                        <span class="badge bg-success">Aktif</span>
                         @endif
                     </td>
 
@@ -175,7 +227,7 @@
 
                                 {{-- Resign --}}
                                 <a class="dropdown-item" href="{{ route('resign.create', ['data_induk_id' => $d->id]) }}">
-                                <i class="ti ti-user-x me-1"></i>Resign
+                                    <i class="ti ti-user-x me-1"></i>Resign
                                 </a>
 
 
@@ -204,7 +256,7 @@
 
                                 <div class="modal-body">
                                     <div class="row">
-                                        
+
 
                                         <div class="col-md-4 mb-3">
                                             <label>Mulai Bertugas</label>
@@ -217,18 +269,23 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nama</label>
+                                            <label>Nama <span class="text-danger">*</span></label>
                                             <input type="text" name="nama" class="form-control" value="{{ $d->nama }}" required>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
+                                            <label>NIK <span class="text-danger">*</span></label>
+                                            <input type="text" name="nik" class="form-control" value="{{ $d->nik }}" required>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
                                             <label>Jenjang</label>
-                                            <input type="text" name="jenjang" class="form-control" value="{{ $d->jenjang_jabatan }}">
+                                            <input type="text" name="jenjang" class="form-control" value="{{ $d->jenjang }}">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Jabatan</label>
-                                            <input type="text" name="jabatan" class="form-control" value="{{ $d->jenjang_jabatan }}">
+                                            <input type="text" name="jabatan" class="form-control" value="{{ $d->jabatan }}">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -242,6 +299,53 @@
                                                 <option value="Aktif" {{ $d->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
                                                 <option value="Tidak Aktif" {{ $d->status == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                                             </select>
+                                        </div>
+
+                                        <!-- DATA PRIBADI -->
+                                        <div class="col-12">
+                                            <hr>
+                                            <h6>Data Pribadi</h6>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>TTL (Tempat, Tanggal Lahir)</label>
+                                            <input type="text" name="ttl" class="form-control" value="{{ $d->ttl }}">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>No HP</label>
+                                            <input type="text" name="no_hp" class="form-control" value="{{ $d->no_hp }}">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Status Perkawinan</label>
+                                            <select name="status_perkawinan" class="form-select">
+                                                <option value="" hidden>Pilih Status</option>
+                                                <option value="Belum Kawin" {{ $d->status_perkawinan == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
+                                                <option value="Kawin" {{ $d->status_perkawinan == 'Kawin' ? 'selected' : '' }}>Kawin</option>
+                                                <option value="Cerai Hidup" {{ $d->status_perkawinan == 'Cerai Hidup' ? 'selected' : '' }}>Cerai Hidup</option>
+                                                <option value="Cerai Mati" {{ $d->status_perkawinan == 'Cerai Mati' ? 'selected' : '' }}>Cerai Mati</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Nama Suami/Istri</label>
+                                            <input type="text" name="suami_istri" class="form-control" value="{{ $d->suami_istri }}">
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label>Alamat</label>
+                                            <textarea name="alamat" class="form-control" rows="2">{{ $d->alamat }}</textarea>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Email</label>
+                                            <input type="email" name="email" class="form-control" value="{{ $d->email }}">
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label>Keterangan</label>
+                                            <textarea name="keterangan" class="form-control" rows="2">{{ $d->keterangan }}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -266,29 +370,29 @@
 
 @push('scripts')
 <script>
-$(document).on('click', '.delete-data-induk', function() {
-    let id = $(this).data('id');
+    $(document).on('click', '.delete-data-induk', function() {
+        let id = $(this).data('id');
 
-    Swal.fire({
-        title: 'Yakin ingin menghapus?',
-        text: "Data ini tidak dapat dipulihkan!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.post(`/data-induk/${id}`, {
-                _token: '{{ csrf_token() }}',
-                _method: 'DELETE'
-            }, function(response) {
-                Swal.fire('Terhapus!', response.message, 'success');
-                location.reload();
-            }).fail(function(xhr) {
-                Swal.fire('Gagal!', xhr.responseJSON.message, 'error');
-            });
-        }
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            text: "Data ini tidak dapat dipulihkan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post(`/data-induk/${id}`, {
+                    _token: '{{ csrf_token() }}',
+                    _method: 'DELETE'
+                }, function(response) {
+                    Swal.fire('Terhapus!', response.message, 'success');
+                    location.reload();
+                }).fail(function(xhr) {
+                    Swal.fire('Gagal!', xhr.responseJSON.message, 'error');
+                });
+            }
+        });
     });
-});
 </script>
 @endpush

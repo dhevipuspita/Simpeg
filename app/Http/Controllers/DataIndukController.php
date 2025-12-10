@@ -21,21 +21,28 @@ class DataIndukController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'no'              => 'nullable|integer',
-            'mulai_bertugas'  => 'nullable|date',
-            'npa'             => 'nullable|string|max:255',
-            'nama'            => 'required|string|max:255',
-            'jenjang'         => 'nullable|string|max:255',
-            'jabatan'         => 'nullable|string|max:225',
-            'gol'             => 'nullable|string|max:50',
-            'status'          => 'nullable|string|max:50',
+            'nama'              => 'required|string|max:255',
+            'nik'               => 'nullable|string|max:255|unique:data_induk,nik',
+            'npa'               => 'nullable|string|max:255',
+            'jabatan'           => 'nullable|string|max:225',
+            'gol'               => 'nullable|string|max:50',
+            'jenjang'           => 'nullable|string|max:255',
+            'mulai_bertugas'    => 'nullable|date',
+            // DATA PRIBADI
+            'ttl'               => 'nullable|string|max:255',
+            'no_hp'             => 'nullable|string|max:50',
+            'status_perkawinan' => 'nullable|string|max:50',
+            'suami_istri'       => 'nullable|string|max:255',
+            'alamat'            => 'nullable|string',
+            'email'             => 'nullable|email|max:255',
+            'keterangan'        => 'nullable|string',
         ]);
 
         try {
             DataInduk::create($validated);
             return redirect()->back()->with('success', 'Data induk berhasil ditambahkan.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Data induk gagal ditambahkan.');
+            return redirect()->back()->with('error', 'Data induk gagal ditambahkan. Error: ' . $e->getMessage());
         }
     }
 
@@ -43,14 +50,21 @@ class DataIndukController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'no'              => 'nullable|integer',
-            'mulai_bertugas'  => 'nullable|date',
-            'npa'             => 'nullable|string|max:255',
-            'nama'            => 'required|string|max:255',
-            'jenjang'         => 'nullable|string|max:255',
-            'jabatan'         => 'nullable|string|max:225',
-            'gol'             => 'nullable|string|max:50',
-            'status'          => 'nullable|string|max:50',
+            'nama'              => 'required|string|max:255',
+            'nik'               => 'nullable|string|max:255|unique:data_induk,nik,' . $id,
+            'npa'               => 'nullable|string|max:255',
+            'jabatan'           => 'nullable|string|max:225',
+            'gol'               => 'nullable|string|max:50',
+            'jenjang'           => 'nullable|string|max:255',
+            'mulai_bertugas'    => 'nullable|date',
+            // DATA PRIBADI
+            'ttl'               => 'nullable|string|max:255',
+            'no_hp'             => 'nullable|string|max:50',
+            'status_perkawinan' => 'nullable|string|max:50',
+            'suami_istri'       => 'nullable|string|max:255',
+            'alamat'            => 'nullable|string',
+            'email'             => 'nullable|email|max:255',
+            'keterangan'        => 'nullable|string',
         ]);
 
         try {
@@ -59,19 +73,19 @@ class DataIndukController extends Controller
 
             return redirect()->back()->with('success', 'Data induk berhasil diubah.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Data induk gagal diubah.');
+            return redirect()->back()->with('error', 'Data induk gagal diubah. Error: ' . $e->getMessage());
         }
     }
-public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,xls'
-    ]);
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
 
-    Excel::import(new DataIndukImport, $request->file('file'));
+        Excel::import(new DataIndukImport, $request->file('file'));
 
-    return redirect()->back()->with('success', 'Data Induk berhasil diimport');
-}
+        return redirect()->back()->with('success', 'Data Induk berhasil diimport');
+    }
     // Hapus data induk
     public function destroy($id)
     {
