@@ -17,7 +17,7 @@ class Riwayat extends Model
         'pendidikan',
         'instansi',
         'tmt_awal',
-        'golongan',         
+        'golongan',
         'tmt_kini',
         'riwayat_gol',
         'riwayat_jabatan',
@@ -25,9 +25,9 @@ class Riwayat extends Model
         'keterangan',
     ];
 
-    public function staff()
+    public function dataInduk()
     {
-        return $this->belongsTo(Staff::class, 'staffId', 'staffId');
+        return $this->belongsTo(DataInduk::class, 'staffId', 'id');
     }
 
     public function jenisGolongan()
@@ -43,7 +43,7 @@ class Riwayat extends Model
     public function latestRiwayatGolongan()
     {
         return $this->hasOne(RiwayatGolongan::class, 'riwayatId', 'riwayatId')
-                    ->latestOfMany('tanggal'); 
+            ->latestOfMany('tanggal');
     }
 
     public function riwayatJabatan()

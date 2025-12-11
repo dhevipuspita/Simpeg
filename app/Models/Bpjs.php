@@ -24,10 +24,8 @@ class Bpjs extends Model
         'keterangan',
     ];
 
-    public function staff(): BelongsTo
+    public function dataInduk(): BelongsTo
     {
-        return $this->belongsTo(Staff::class, 'staffId', 'staffId');
+        return $this->belongsTo(DataInduk::class, 'staffId', 'id');
     }
-    
 }
-
