@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4">Data Induk</h4>
+    <h4 class="fw-bold py-3 mb-4">Data Induk Pegawai</h4>
 
     <div class="d-block mb-3">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
@@ -92,7 +92,13 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Status Perkawinan</label>
-                                <input type="text" name="statusPerkawinan" class="form-control" placeholder="Lajang / Menikah / Dll">
+                                <select class="form-select" name="status">
+                                    <option value="" hidden>Pilih Status</option>
+                                    <option value="Belum Menikah">Belum Menikah</option>
+                                    <option value="Menikah">Menikah</option>
+                                    <option value="Cerai Hidup">Cerai Hidup</option>
+                                    <option value="Cerai Mati">Cerai Mati</option>
+                                </select>
                             </div>
 
                             <div class="col-md-6 mb-3">
