@@ -69,6 +69,53 @@
                                 </select>
                             </div>
 
+                            {{-- ====== Tambahan Biodata ====== --}}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tempat Lahir</label>
+                                <input type="text" name="birthPlace" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tanggal Lahir</label>
+                                <input type="date" name="birthDate" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">NIK</label>
+                                <input type="text" name="nik" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">No HP</label>
+                                <input type="text" name="noHp" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Status Perkawinan</label>
+                                <input type="text" name="statusPerkawinan" class="form-control" placeholder="Lajang / Menikah / Dll">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Suami/Istri</label>
+                                <input type="text" name="suami_istri" class="form-control">
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Alamat</label>
+                                <textarea name="alamat" class="form-control" rows="2"></textarea>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control">
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <textarea name="keterangan" class="form-control" rows="2"></textarea>
+                            </div>
+                            {{-- ====== END Tambahan Biodata ====== --}}
+
                         </div>
                     </div>
 
@@ -136,7 +183,7 @@
                 {{-- ROW merah jika resign --}}
                 <tr class="{{ $d->status_pegawai == 'resign' ? 'table-danger' : '' }}">
 
-                    <td>{{ $loop->iteration }}</td> {{-- NOMOR OTOMATIS --}}
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $d->mulai_bertugas }}</td>
                     <td>{{ $d->npa }}</td>
                     <td>{{ $d->nama }}</td>
@@ -262,9 +309,8 @@
                             <form action="{{ route('perizinan.store') }}" method="POST">
                                 @csrf
 
-                                {{-- kirim id data_induk & staff ke controller --}}
+                                {{-- kirim id data_induk --}}
                                 <input type="hidden" name="data_induk_id" value="{{ $d->id }}">
-                                <input type="hidden" name="staffId" value="{{ optional($d->staff)->staffId }}">
 
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="cutiModalLabel{{ $d->id }}">
@@ -275,32 +321,39 @@
 
                                 <div class="modal-body">
                                     <div class="row">
+                                        {{-- Tanggal Surat --}}
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Tanggal Surat Permohonan Cuti
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <input type="date" name="tglSurat" class="form-control" required>
                                         </div>
+
+                                        {{-- Tanggal Mulai Cuti --}}
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Tanggal Mulai Cuti
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input type="date" name="tglMulai" class="form-control" required>
+                                            <input type="date" name="mulai_tanggal" class="form-control" required>
+                                            {{--  ^^^^^^^^^^^^^  HARUS SAMA dengan validasi controller --}}
                                         </div>
+
+                                        {{-- Tanggal Berakhir Cuti --}}
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Tanggal Berakhir Cuti
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input type="date" name="tglAkhir" class="form-control" required>
+                                            <input type="date" name="akhir_tanggal" class="form-control" required>
+                                            {{--  ^^^^^^^^^^^^^  HARUS SAMA --}}
                                         </div>
+
+                                        {{-- Alasan Cuti --}}
                                         <div class="col-12 mb-3">
                                             <label class="form-label">Alasan Cuti
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <textarea name="alasan" rows="3" class="form-control" required></textarea>
                                         </div>
-
-                                        <hr>
                                     </div>
                                 </div>
 
@@ -308,7 +361,6 @@
                                     <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                     <button class="btn btn-primary">Simpan Cuti</button>
                                 </div>
-
                             </form>
                         </div>
                     </div>

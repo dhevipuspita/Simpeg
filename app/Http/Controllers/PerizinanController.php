@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Perizinan;
-use App\Models\Staff;
 use App\Models\DataInduk;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -12,46 +11,40 @@ class PerizinanController extends Controller
 {
     public function index()
     {
-        // ambil semua staff untuk dropdown
-        $staff = Staff::orderBy('name')->get();
-
-        // ambil semua perizinan + relasi staff & data_induk
-        $perizinan = Perizinan::with(['staff', 'dataInduk'])
+        $perizinan = Perizinan::with('dataInduk')
             ->orderBy('perizinanId', 'desc')
             ->get();
 
-        // kirim KEDUANYA ke view
-        return view('pages.perizinan.index', compact('staff', 'perizinan'));
-    }
+        $dataInduk = DataInduk::orderBy('nama')->get();
 
+        return view('pages.perizinan.index', compact('perizinan', 'dataInduk'));
+    }
+    
     public function store(Request $request)
     {
         try {
             $request->validate([
-                'staffId'       => 'required|exists:staff,staffId',
                 'data_induk_id' => 'required|exists:data_induk,id',
                 'tglSurat'      => 'required|date',
                 'mulai_tanggal' => 'required|date',
                 'akhir_tanggal' => 'required|date|after_or_equal:mulai_tanggal',
-                'lamaCuti'      => 'nullable|integer|min:1',
-                'alasan'        => 'nullable|string',
+                'alasan'        => 'required|string',
             ]);
 
-            // Hitung lama cuti otomatis
+            // Hitung lama cuti (inklusi hari pertama & terakhir)
             $mulai = Carbon::parse($request->mulai_tanggal);
             $akhir = Carbon::parse($request->akhir_tanggal);
             $lamaCuti = $mulai->diffInDays($akhir) + 1;
 
             // SIMPAN CUTI
             Perizinan::create([
-                'staffId'       => $request->staffId,
                 'data_induk_id' => $request->data_induk_id,
                 'tglSurat'      => $request->tglSurat,
                 'mulai_tanggal' => $request->mulai_tanggal,
                 'akhir_tanggal' => $request->akhir_tanggal,
                 'lamaCuti'      => $lamaCuti,
                 'alasan'        => $request->alasan,
-                'isComback'     => false, // default
+                'isComback'     => false,
             ]);
 
             // UPDATE STATUS PEGAWAI MENJADI CUTI
@@ -71,16 +64,13 @@ class PerizinanController extends Controller
         try {
             $request->validate([
                 'tglSurat'      => 'required|date',
-                'mulai_hari'    => 'required|string',
                 'mulai_tanggal' => 'required|date',
-                'akhir_hari'    => 'required|string',
                 'akhir_tanggal' => 'required|date|after_or_equal:mulai_tanggal',
-                'alasan'        => 'nullable|string',
+                'alasan'        => 'required|string',
             ]);
 
             $perizinan = Perizinan::findOrFail($id);
 
-            // Hitung ulang lama cuti
             $mulai = Carbon::parse($request->mulai_tanggal);
             $akhir = Carbon::parse($request->akhir_tanggal);
             $lamaCuti = $mulai->diffInDays($akhir) + 1;
@@ -102,12 +92,13 @@ class PerizinanController extends Controller
     public function destroy($id)
     {
         $perizinan = Perizinan::findOrFail($id);
-
-        // Jika cuti dihapus, status pegawai KEMBALI AKTIF
         $dataInduk = $perizinan->dataInduk;
-        $dataInduk->update([
-            'status_pegawai' => 'aktif'
-        ]);
+
+        if ($dataInduk) {
+            $dataInduk->update([
+                'status_pegawai' => 'aktif',
+            ]);
+        }
 
         $perizinan->delete();
 
@@ -121,12 +112,10 @@ class PerizinanController extends Controller
     {
         $perizinan = Perizinan::findOrFail($id);
 
-        // Update perizinan
         $perizinan->update([
             'isComback' => true,
         ]);
 
-        // UPDATE status pegawai → AKTIF
         $dataInduk = $perizinan->dataInduk;
         if ($dataInduk) {
             $dataInduk->update([

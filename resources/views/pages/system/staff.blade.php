@@ -3,462 +3,202 @@
 @section('title', 'Data Diri Pegawai')
 
 @section('content')
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4">Data Diri Pegawai</h4>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">Data Diri Pegawai</h4>
 
-        <div class="d-block mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahModal">Tambah</button>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
-        </div>
+    {{-- Tabel --}}
+    <div class="table-responsive">
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Tempat Lahir</th>
+                    <th>Tanggal Lahir</th>
+                    <th>NIK</th>
+                    <th>No HP</th>
+                    <th>Status Perkawinan</th>
+                    <th>Nama Suami/Istri</th>
+                    <th>Alamat</th>
+                    <th>Email</th>
+                    <th>Keterangan</th>
+                    <th>Status Pegawai</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
 
-        {{-- Modal Tambah --}}
-        <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form action="{{ route('staff.store') }}" method="POST">
-                        @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="tambahModalLabel">Tambah Data Staff</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                            <div class="mb-3">
-                                
-                                <div class="mb-3 position-relative">
-                                <label class="form-label">Nama Pegawai</label>
+            <tbody>
+                @foreach ($dataInduk as $d)
+                    {{-- ROW merah jika resign --}}
+                    <tr class="{{ $d->status_pegawai == 'resign' ? 'table-danger' : '' }}">
 
-                                <!-- Input yang bisa diketik -->
-                                <input type="text" id="searchPegawai" class="form-control" placeholder="Ketik nama...">
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $d->nama }}</td>
+                        <td>{{ $d->birthPlace ?? '-' }}</td>
+                        <td>{{ $d->birthDate ?? '-' }}</td>
+                        <td>{{ $d->nik ?? '-' }}</td>
+                        <td>{{ $d->noHp ?? '-' }}</td>
+                        <td>{{ $d->statusPerkawinan ?? '-' }}</td>
+                        <td>{{ $d->suami_istri ?? '-' }}</td>
+                        <td>{{ $d->alamat ?? '-' }}</td>
+                        <td>{{ $d->email ?? '-' }}</td>
+                        <td>{{ $d->keterangan ?? '-' }}</td>
 
-                                <!-- Simpan ID ke hidden input -->
-                                <input type="hidden" name="data_induk_id" id="dataIndukId" required>
+                        <td>
+                            @if ($d->status_pegawai == 'resign')
+                                <span class="badge bg-danger">Resign</span>
+                            @elseif ($d->status_pegawai == 'cuti')
+                                <span class="badge bg-warning text-dark">Cuti</span>
+                            @else
+                                <span class="badge bg-success">Aktif</span>
+                            @endif
+                        </td>
 
-                                <!-- Tempat munculnya list hasil pencarian -->
-                                <div id="pegawaiList"
-                                    class="border bg-white w-100 d-none position-absolute"
-                                    style="z-index: 1000; max-height: 180px; overflow-y:auto;">
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                        data-bs-toggle="dropdown">
+                                    <i class="ti ti-dots-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    {{-- Edit --}}
+                                    <button class="dropdown-item"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#updateModal{{ $d->id }}">
+                                        <i class="ti ti-pencil me-1"></i>Edit
+                                    </button>
+
+                                    {{-- Hapus --}}
+                                    <button class="dropdown-item delete-data-induk"
+                                            data-id="{{ $d->id }}">
+                                        <i class="ti ti-trash me-1"></i>Hapus
+                                    </button>
                                 </div>
                             </div>
-
-                            </div>
-
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="nik" class="form-label">NIK</label>
-                                        <input type="text" class="form-control" id="nik" placeholder="Masukkan NIK"
-                                            name="nik" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="birthPlace" class="form-label">Tempat Lahir</label>
-                                        <input type="text" class="form-control" id="birthPlace"
-                                            placeholder="Masukkan Tempat Lahir" name="birthPlace" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="birthDate" class="form-label">Tanggal Lahir</label>
-                                        <input type="text" class="form-control" placeholder="YYYY-MM-DD"
-                                            id="birthDate" name="birthDate" />
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="alamat" class="form-label">Alamat</label>
-                                        <textarea name="alamat" id="alamat" cols="30" rows="3" class="form-control"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="noHp" class="form-label">No HP</label>
-                                        <input type="text" class="form-control" id="noHp"
-                                            placeholder="Masukkan nomor HP" name="noHp" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="statusPerkawinan" class="form-label">Status Perkawinan</label>
-                                        <select name="statusPerkawinan" id="statusPerkawinan" class="form-select">
-                                            <option value="" selected hidden>Pilih Status</option>
-                                            <option value="Belum Kawin">Belum Kawin</option>
-                                            <option value="Kawin">Kawin</option>
-                                            <option value="Cerai Hidup">Cerai Hidup</option>
-                                            <option value="Cerai Mati">Cerai Mati</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="suami_istri" class="form-label">Nama Suami/Istri</label>
-                                        <input type="text" class="form-control" id="suami_istri"
-                                            placeholder="Masukkan nama suami/istri" name="suami_istri" />
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email"
-                                            placeholder="Masukkan email" name="email" />
-                                    </div>
-                                </div>
-                            </div> 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-        {{-- Modal Import --}}
-        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form action="{{ route('staff.import') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="importModalLabel">Import Data Staff</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="excelFile">File (xlsx,xls) <span style="color:red">*</span></label>
-                                        <input type="file" name="excelFile" id="excelFile" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="mb-3">
-                                        <a role="button" href="{{ route('staff.template') }}"
-                                            class="btn btn-warning">Download Template</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Import</button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-        {{-- Tabel Staff --}}
-        <div class="table-responsive">
-            <table class="table" id="table">
-                <thead>
-                    <tr class="text-align: center">
-                        <th>No</th>
-                        <th>Nama Staff</th>
-                        <th>NIK</th>
-                        <th>Tempat Lahir</th>
-                        <th>Tanggal Lahir</th>
-                        <th>Status Perkawinan</th>
-                        <th>Status Pegawai</th>
-                        <th>Actions</th>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                    @foreach ($staff as $key => $s)
-                        @php
-                            // Cek apakah nama staff ada di data_induk dengan status resign
-                            $isResign = \App\Models\DataInduk::where('nama', $s->name)
-                                        ->where('status_pegawai', 'resign')
-                                        ->exists();
-                        @endphp
-                        
-                        <tr class="{{ $isResign ? 'table-danger' : '' }}">
-                            <td>{{ $key + 1 }}</td>
-                            <td>
-                                {{ $s->name }}
-                                @if($isResign)
-                                    
-                                @endif
-                            </td>
-                            <td>{{ $s->nik ?? '-' }}</td>
-                            <td>{{ $s->birthPlace ?? '-' }}</td>
-                            <td>{{ $s->birthDate ?? '-' }}</td>
-                            <td>{{ $s->statusPerkawinan ?? '-' }}</td>
-                            <td>
-                                @if($isResign)
-                                    <span class="badge bg-danger">Resign</span>
-                                @else
-                                    <span class="badge bg-success">Aktif</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                        data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>
-                                    <div class="dropdown-menu">
-                                        <button class="dropdown-item" data-bs-toggle="modal"
-                                            data-bs-target="#infoModal{{ $s->staffId }}"><i
-                                                class="ti ti-info-circle me-1"></i>Info</button>
-                                        <button class="dropdown-item" data-bs-toggle="modal"
-                                            data-bs-target="#updateModal{{ $s->staffId }}"><i
-                                                class="ti ti-pencil me-1"></i>Edit</button>
-                                        <button class="dropdown-item delete-staff"
-                                            data-id="{{ $s->staffId }}"><i class="ti ti-trash me-1"></i>Delete</button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
 
-                        {{-- Modal Info --}}
-                        <div class="modal fade" id="infoModal{{ $s->staffId }}" tabindex="-1"
-                            aria-labelledby="infoModal{{ $s->staffId }}Label" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
+                    {{-- Modal Update --}}
+                    <div class="modal fade" id="updateModal{{ $d->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <form method="POST" action="{{ route('data-induk.update', $d->id) }}">
+                                    @csrf
+                                    @method('PUT')
+
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="infoModal{{ $s->staffId }}Label">Info Data Staff</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close">
-                                        </button>
+                                        <h5 class="modal-title">Update Data Induk</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
+
                                     <div class="modal-body">
-                                        <p><b>Nama :</b> {{ $s->name }}</p>
-                                        <p><b>Tempat, Tanggal Lahir :</b>
-                                            {{ $s->birthPlace ?? '-' }}
-                                            @if ($s->birthDate)
-                                                , {{ \Carbon\Carbon::parse($s->birthDate)->translatedFormat('d F Y') }}
-                                            @endif
-                                        </p>
-                                        <p><b>NIK :</b> {{ $s->nik ?? '-' }}</p>
-                                        <p><b>Status Perkawinan :</b> {{ $s->statusPerkawinan ?? '-' }}</p>
-                                        <p><b>Suami/Istri :</b> {{ $s->suami_istri ?? '-' }}</p>
-                                        <p><b>Alamat :</b> {{ $s->alamat ?? '-' }}</p>
-                                        <p><b>No HP :</b> {{ $s->noHp ?? '-' }}</p>
-                                        <p><b>Email :</b> {{ $s->email ?? '-' }}</p>
-                                        @if($isResign)
-                                            <p><b>Status Pegawai :</b> <span class="badge bg-danger">Resign</span></p>
-                                        @else
-                                            <p><b>Status Pegawai :</b> <span class="badge bg-success">Aktif</span></p>
-                                        @endif
+                                        <div class="row">
+
+                                            {{-- Nama (tidak bisa diubah) --}}
+                                            <div class="col-12 mb-3">
+                                                <label>Nama</label>
+                                                <input type="text" class="form-control" value="{{ $d->nama }}" disabled>
+                                                <input type="hidden" name="nama" value="{{ $d->nama }}">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label>Tempat Lahir</label>
+                                                <input type="text" name="birthPlace" class="form-control"
+                                                       value="{{ $d->birthPlace }}">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label>Tanggal Lahir</label>
+                                                <input type="date" name="birthDate" class="form-control"
+                                                       value="{{ $d->birthDate }}">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label>NIK</label>
+                                                <input type="text" name="nik" class="form-control"
+                                                       value="{{ $d->nik }}">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label>No HP</label>
+                                                <input type="text" name="noHp" class="form-control"
+                                                       value="{{ $d->noHp }}">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label>Status Perkawinan</label>
+                                                <input type="text" name="statusPerkawinan" class="form-control"
+                                                       value="{{ $d->statusPerkawinan }}">
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label>Nama Suami/Istri</label>
+                                                <input type="text" name="suami_istri" class="form-control"
+                                                       value="{{ $d->suami_istri }}">
+                                            </div>
+
+                                            <div class="col-12 mb-3">
+                                                <label>Alamat</label>
+                                                <textarea name="alamat" class="form-control" rows="2">{{ $d->alamat }}</textarea>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label>Email</label>
+                                                <input type="email" name="email" class="form-control"
+                                                       value="{{ $d->email }}">
+                                            </div>
+
+                                            <div class="col-12 mb-3">
+                                                <label>Keterangan</label>
+                                                <textarea name="keterangan" class="form-control" rows="2">{{ $d->keterangan }}</textarea>
+                                            </div>
+
+                                        </div>
                                     </div>
+
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
+                                        <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        <button class="btn btn-primary">Simpan</button>
                                     </div>
-                                </div>
+
+                                </form>
+
                             </div>
                         </div>
-
-                        {{-- Modal Edit --}}
-                        <div class="modal fade" id="updateModal{{ $s->staffId }}" tabindex="-1"
-                            aria-labelledby="updateModal{{ $s->staffId }}Label" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <form action="{{ route('staff.update', $s->staffId) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="updateModal{{ $s->staffId }}Label">Update Data Staff</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close">
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Nama <span
-                                                                style="color:red">*</span></label>
-                                                        <input type="text" class="form-control" name="name"
-                                                            value="{{ $s->name }}" required />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">NIK</label>
-                                                        <input type="text" class="form-control" name="nik"
-                                                            value="{{ $s->nik }}" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Tempat Lahir</label>
-                                                        <input type="text" class="form-control" name="birthPlace"
-                                                            value="{{ $s->birthPlace }}" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Tanggal Lahir</label>
-                                                        <input type="text" class="form-control" name="birthDate"
-                                                            value="{{ $s->birthDate }}" placeholder="YYYY-MM-DD" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Alamat</label>
-                                                        <textarea name="alamat" cols="30" rows="3" class="form-control">{{ $s->alamat }}</textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">No HP</label>
-                                                        <input type="text" class="form-control" name="noHp"
-                                                            value="{{ $s->noHp }}" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Status Perkawinan</label>
-                                                        <select name="statusPerkawinan" class="form-select">
-                                                            <option value="" {{ $s->statusPerkawinan == null ? 'selected' : '' }}>Pilih Status</option>
-                                                            <option value="Belum Kawin" {{ $s->statusPerkawinan == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
-                                                            <option value="Kawin" {{ $s->statusPerkawinan == 'Kawin' ? 'selected' : '' }}>Kawin</option>
-                                                            <option value="Cerai Hidup" {{ $s->statusPerkawinan == 'Cerai Hidup' ? 'selected' : '' }}>Cerai Hidup</option>
-                                                            <option value="Cerai Mati" {{ $s->statusPerkawinan == 'Cerai Mati' ? 'selected' : '' }}>Cerai Mati</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Nama Suami/Istri</label>
-                                                        <input type="text" class="form-control" name="suami_istri"
-                                                            value="{{ $s->suami_istri }}" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-sm-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Email</label>
-                                                        <input type="email" class="form-control" name="email"
-                                                            value="{{ $s->email }}" />
-                                                    </div>
-                                                </div>
-                                            </div> 
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
+</div>
 @endsection
 
 @push('scripts')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).on('click', '.delete-data-induk', function () {
+        let id = $(this).data('id');
 
-    <script>
-        $(document).ready(function() {
-                   // Aktifkan Select2
-            $('.select2').select2({
-                dropdownParent: $('#tambahModal'),
-                width: '100%',
-                placeholder: "Cari nama pegawai...",
-                allowClear: true
-            });
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            text: "Data ini tidak dapat dipulihkan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post(`/data-induk/${id}`, {
+                    _token: '{{ csrf_token() }}',
+                    _method: 'DELETE'
+                }, function (response) {
+                    Swal.fire('Terhapus!', response.message, 'success');
+                    location.reload();
+                }).fail(function (xhr) {
+                    Swal.fire('Gagal!', xhr.responseJSON.message, 'error');
+                });
+            }
         });
-
-        $(document).on('click', '.delete-staff', function() {
-            let id = $(this).data('id');
-            Swal.fire({
-                title: 'Apakah anda yakin?',
-                text: "Data yang dihapus tidak dapat dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "/staff/" + id,
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            _method: 'DELETE'
-                        },
-                        success: function(response) {
-                            Swal.fire(
-                                'Terhapus!',
-                                response.message,
-                                'success'
-                            )
-                            location.reload();
-                        },
-                        error: function(xhr) {
-                            Swal.fire(
-                                'Gagal!',
-                                xhr.responseJSON?.message || 'Terjadi kesalahan',
-                                'error'
-                            )
-                        }
-                    })
-                }
-            })
-        })
-    </script>
-    <script>
-    let dataInduk = @json($dataInduk);
-
-    const input = document.getElementById('searchPegawai');
-    const list = document.getElementById('pegawaiList');
-    const hiddenId = document.getElementById('dataIndukId');
-
-    input.addEventListener('keyup', function () {
-        let keyword = this.value.toLowerCase();
-        list.innerHTML = "";
-
-        if (!keyword) {
-            hiddenId.value = "";
-            list.classList.add('d-none');
-            return;
-        }
-
-        let hasil = dataInduk.filter(d => d.nama.toLowerCase().includes(keyword));
-
-        if (hasil.length === 0) {
-            list.classList.add('d-none');
-            return;
-        }
-
-        hasil.forEach(d => {
-            let item = document.createElement('div');
-            item.classList.add('p-2', 'border-bottom');
-            item.style.cursor = "pointer";
-            item.textContent = d.nama;
-
-            item.onclick = () => {
-                input.value = d.nama;
-                hiddenId.value = d.id;
-                list.classList.add('d-none');
-            };
-
-            list.appendChild(item);
-        });
-
-        list.classList.remove('d-none');
-    });
-
-    // Klik luar -> menutup list
-    document.addEventListener('click', function (e) {
-        if (!input.contains(e.target)) {
-            list.classList.add('d-none');
-        }
     });
 </script>
-
 @endpush

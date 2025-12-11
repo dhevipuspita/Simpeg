@@ -22,12 +22,17 @@ class DataInduk extends Model
         "gol",
         "status",
         "status_pegawai", // WAJIB! Agar bisa berubah jadi 'resign'
+        "birthPlace",
+        "birthDate",
+        "nik",
+        "noHp",
+        "statusPerkawinan",
+        "suami_istri",
+        "alamat",
+        "email",
+        "keterangan",
     ];
 
-    public function staff()
-    {
-        return $this->hasOne(Staff::class, 'dataIndukId', 'id');
-    }
     public function perizinan()
     {
         return $this->hasMany(Perizinan::class, 'data_induk_id', 'id');

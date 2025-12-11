@@ -107,14 +107,24 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title m-0 me-2 pt-1 mb-1">Log Perizinan Staff</h5>
+                        <h5 class="card-title m-0 me-2 pt-1 mb-1">Log Perizinan Pegawai</h5>
                         <small class="text-muted">3 perizinan terakhir yang tercatat</small>
                     </div>
                 </div>
+
                 <div class="card-body pb-0">
                     @if ($latestPerizinan->count() > 0)
                         <ul class="timeline ms-1 mb-0">
                             @foreach ($latestPerizinan as $key => $lp)
+                                @php
+                                    $tglMulai = $lp->mulai_tanggal
+                                        ? \Carbon\Carbon::parse($lp->mulai_tanggal)->locale('id_ID')->translatedFormat('d F Y')
+                                        : '-';
+                                    $tglAkhir = $lp->akhir_tanggal
+                                        ? \Carbon\Carbon::parse($lp->akhir_tanggal)->locale('id_ID')->translatedFormat('d F Y')
+                                        : '-';
+                                @endphp
+
                                 <li class="timeline-item timeline-item-transparent ps-4">
                                     @if ($key == 0)
                                         <span class="timeline-point timeline-point-primary"></span>
@@ -123,18 +133,23 @@
                                     @else
                                         <span class="timeline-point timeline-point-success"></span>
                                     @endif
+
                                     <div class="timeline-event">
                                         <div class="timeline-header">
                                             <h6 class="mb-0">
-                                                {{ $lp->staff->name ?? '-' }}
+                                                {{ $lp->dataInduk->nama ?? '-' }}
                                             </h6>
                                             <small class="text-muted">
                                                 {{ $lp->created_at?->diffForHumans() }}
                                             </small>
                                         </div>
+
                                         <p class="mb-2">
-                                            {{ $lp->description ?? '-' }}
+                                            Cuti dari <strong>{{ $tglMulai }}</strong>
+                                            sampai <strong>{{ $tglAkhir }}</strong><br>
+                                            Alasan: {{ $lp->alasan ?? '-' }}
                                         </p>
+
                                         <small class="text-muted">
                                             Status:
                                             @if ($lp->isComback)
@@ -154,4 +169,5 @@
             </div>
         </div>
     </div>
+
 </div>

@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id('perizinanId');
 
             // relasi
-            $table->unsignedBigInteger('staffId');
             $table->unsignedBigInteger('data_induk_id');
 
             // data cuti
@@ -27,11 +26,6 @@ return new class extends Migration
             $table->timestamps();
 
             // foreign key
-            $table->foreign('staffId')
-                ->references('staffId')
-                ->on('staff')
-                ->onDelete('cascade');
-
             $table->foreign('data_induk_id')
                 ->references('id')
                 ->on('data_induk')

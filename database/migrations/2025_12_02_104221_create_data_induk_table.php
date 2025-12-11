@@ -9,14 +9,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('data_induk', function (Blueprint $table) {
-            $table->id();                       // Primary Key
-            $table->integer('no')->nullable();  // No
-            $table->date('mulai_bertugas')->nullable(); // Mulai bertugas
-            $table->string('npa')->nullable();  // N P A
-            $table->string('nama');             // Nama
-            $table->string('jenjang_jabatan')->nullable(); // Jenjang jabatan
-            $table->string('gol')->nullable();  // Gol
-            $table->string('status')->nullable(); // Status
+            $table->id();                  
+            $table->date('mulai_bertugas')->nullable(); 
+            $table->string('npa')->nullable();  
+            $table->string('nama');             
+            $table->string('jenjang')->nullable(); 
+            $table->string('jabatan')->nullable(); 
+            $table->string('status')->nullable(); 
+            $table->string('status_pegawai')->nullable(); 
+            $table->string('gol')->nullable();  
+            $table->string('birthPlace')->nullable(); 
+            $table->date('birthDate')->nullable(); 
+            $table->string('nik')->nullable(); 
+            $table->string('noHp')->nullable(); 
+            $table->string('statusPerkawinan')->nullable(); 
+            $table->string('suami_istri')->nullable(); 
+            $table->string('alamat')->nullable(); 
+            $table->string('email')->nullable(); 
+            $table->string('keterangan')->nullable(); 
             $table->timestamps();
         });
     }

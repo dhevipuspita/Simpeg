@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataInduk;
 use App\Models\Jenjang;
 use App\Models\Perizinan;
 use App\Models\Resign;
-use App\Models\Staff;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,34 +15,28 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Jumlah 
-        $countStaff = Staff::count();
+        $countStaff   = DataInduk::count();
+
         $countJenjang = Jenjang::count();
 
-        // Statistik Perizinan
-        $staffIzin = Perizinan::where('isComback', false)->count();
-        $staffKembali = Perizinan::where('isComback', true)->count();
+        $staffIzin    = Perizinan::where('isComback', false)->count(); // masih cuti
+        $staffKembali = Perizinan::where('isComback', true)->count();  // sudah kembali
 
-        // Perizinan terbaru
-        $latestPerizinan = Perizinan::with('staff')
+        $latestPerizinan = Perizinan::with('dataInduk')
             ->latest()
             ->take(3)
             ->get();
 
-        // Staff Keluar
         $staffKeluar = Resign::count();
 
-        return view(
-            'pages.dashboard',
-            compact(
-                "user",
-                "countStaff",
-                "countJenjang",
-                "staffIzin",
-                "staffKembali",
-                "staffKeluar",
-                "latestPerizinan"
-            )
-        );
+        return view('pages.dashboard', compact(
+            'user',
+            'countStaff',
+            'countJenjang',
+            'staffIzin',
+            'staffKembali',
+            'staffKeluar',
+            'latestPerizinan'
+        ));
     }
 }
