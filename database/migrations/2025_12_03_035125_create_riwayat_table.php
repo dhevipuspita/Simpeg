@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('riwayat', function (Blueprint $table) {
             $table->id('riwayatId');
 
-            $table->unsignedBigInteger('staffId');        
+            $table->unsignedBigInteger('data_induk_id');        
             $table->string('pendidikan')->nullable();
             $table->string('instansi')->nullable();
             $table->date('tmt_awal')->nullable();

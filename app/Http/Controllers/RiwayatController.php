@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataInduk;
 use App\Models\JenisGolongan;
 use App\Models\Riwayat;
-use App\Models\Staff;
 use Illuminate\Http\Request;
 
 class RiwayatController extends Controller
@@ -12,21 +12,21 @@ class RiwayatController extends Controller
     public function index()
     {
         $riwayat = Riwayat::with([
-            'staff',
+            'dataInduk',
             'jenisGolongan', 
             'latestRiwayatGolongan.jenisGolongan',
         ])->get();
-        $staff          = Staff::orderBy('name')->get();
+        $dataInduk      = DataInduk::orderBy('nama')->get();
         $jenis_golongan = JenisGolongan::orderBy('jenis', 'asc')->get();
 
-        return view('pages.system.riwayat', compact('riwayat', 'staff', 'jenis_golongan'));
+        return view('pages.system.riwayat', compact('riwayat', 'dataInduk', 'jenis_golongan'));
     }
 
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'staffId' => 'required|exists:staff,staffId',
+            'data_induk_id'   => 'required|exists:data_induk,id',
             'pendidikan' => 'nullable|string|max:255',
             'instansi' => 'nullable|string|max:255',
             'tmt_awal' => 'nullable|date',
@@ -52,7 +52,7 @@ class RiwayatController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'staffId' => 'required|exists:staff,staffId',
+            'data_induk_id'   => 'required|exists:data_induk,id',
             'pendidikan' => 'nullable|string|max:255',
             'instansi' => 'nullable|string|max:255',
             'golongan' => 'nullable|exists:jenis_golongan,jenisId',
@@ -66,7 +66,6 @@ class RiwayatController extends Controller
 
         try {
             $riwayat = Riwayat::findOrFail($id); 
-
             $riwayat->update($validated);
 
             return redirect()
@@ -98,7 +97,7 @@ class RiwayatController extends Controller
     public function show($id)
     {
         $riwayat = Riwayat::with([
-                'staff',
+                'dataInduk',
                 'riwayatGolongan.jenisGolongan',
             ])
             ->findOrFail($id);
@@ -110,7 +109,9 @@ class RiwayatController extends Controller
 
     public function show2($id)
     {
-        $riwayat = Riwayat::with(['staff', 'riwayatJabatan'])
+        $riwayat = Riwayat::with([
+            'dataInduk',
+            'riwayatJabatan'])
             ->findOrFail($id); 
 
         return view('pages.system.riwayat_jabatan', compact('riwayat'));

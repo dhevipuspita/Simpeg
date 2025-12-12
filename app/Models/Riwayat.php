@@ -13,7 +13,7 @@ class Riwayat extends Model
     protected $primaryKey = 'riwayatId';
 
     protected $fillable = [
-        'staffId',
+        'data_induk_id',
         'pendidikan',
         'instansi',
         'tmt_awal',
@@ -25,9 +25,9 @@ class Riwayat extends Model
         'keterangan',
     ];
 
-    public function staff()
+    public function dataInduk()
     {
-        return $this->belongsTo(Staff::class, 'staffId', 'staffId');
+        return $this->belongsTo(DataInduk::class, 'data_induk_id', 'id');
     }
 
     public function jenisGolongan()

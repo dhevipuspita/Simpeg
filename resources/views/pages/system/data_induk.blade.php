@@ -39,12 +39,10 @@
                                 <label class="form-label">Nama</label>
                                 <input type="text" name="nama" class="form-control" required>
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Jenjang</label>
                                 <input type="text" name="jenjang" class="form-control">
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Jabatan</label>
                                 <input type="text" name="jabatan" class="form-control">
@@ -54,22 +52,19 @@
                                 <label class="form-label">Gol</label>
                                 <input type="text" name="gol" class="form-control">
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Status</label>
                                 <select class="form-select" name="status">
                                     <option value="" hidden>Pilih Status</option>
-                                    <option value="Aktif">Tetap</option>
-                                    <option value="Tidak Aktif">KTK</option>
-                                    <option value="Aktif">KHS</option>
-                                    <option value="Aktif">PKDWT</option>
-                                    <option value="Aktif">MGG</option>
-                                    <option value="Aktif">HR</option>
-                                    <option value="Aktif">TAKHFIZ</option>
+                                    <option value="Tetap">Tetap</option>
+                                    <option value="KTK">KTK</option>
+                                    <option value="KHS">KHS</option>
+                                    <option value="PKWT">PKDWT</option>
+                                    <option value="MGG">MGG</option>
+                                    <option value="HR">HR</option>
+                                    <option value="TAKHFIZ">TAKHFIZ</option>
                                 </select>
                             </div>
-
-                            {{-- ====== Tambahan Biodata ====== --}}
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tempat Lahir</label>
                                 <input type="text" name="birthPlace" class="form-control">
@@ -92,7 +87,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Status Perkawinan</label>
-                                <select class="form-select" name="status">
+                                <select class="form-select" name="statusPerkawinan">
                                     <option value="" hidden>Pilih Status</option>
                                     <option value="Belum Menikah">Belum Menikah</option>
                                     <option value="Menikah">Menikah</option>
@@ -100,7 +95,6 @@
                                     <option value="Cerai Mati">Cerai Mati</option>
                                 </select>
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Nama Suami/Istri</label>
                                 <input type="text" name="suami_istri" class="form-control">
@@ -179,6 +173,7 @@
                     <th>Gol</th>
                     <th>Status</th>
                     <th>Status Pegawai</th>
+                    <th>Keterangan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -197,7 +192,6 @@
                     <td>{{ $d->jabatan ?? '-' }}</td>
                     <td>{{ $d->gol ?? '-' }}</td>
                     <td>{{ $d->status ?? '-' }}</td>
-
                     <td>
                         @if ($d->status_pegawai == 'resign')
                             <span class="badge bg-danger">Resign</span>
@@ -207,7 +201,16 @@
                             <span class="badge bg-success">Aktif</span>
                         @endif
                     </td>
-
+                    <td>
+                        @if ($d->status_pegawai == 'resign')
+                            {{ $d->resign->keterangan ?? '-' }}
+                        @elseif ($d->status_pegawai == 'cuti')
+                            {{ optional($d->perizinan->last())->alasan ?? '-' }}
+                        @else
+                            {{-- Aktif --}}
+                            -
+                        @endif
+                    </td>
                     <td>
                         <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -280,6 +283,11 @@
                                         <div class="col-md-6 mb-3">
                                             <label>Jabatan</label>
                                             <input type="text" name="jabatan" class="form-control" value="{{ $d->jabatan }}">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Gol</label>
+                                            <input type="text" name="gol" class="form-control" value="{{ $d->gol }}">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
