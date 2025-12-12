@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\BpjsImport;
 use App\Models\Bpjs;
-use App\Models\DataInduk; // Replaces Staff
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -15,19 +15,19 @@ class BpjsController extends Controller
     public function index()
     {
         // Data BPJS nanti diambil lewat AJAX (DataTables)
-        $staff = DataInduk::where('status_pegawai', '!=', 'Resign')->orderBy('nama')->get();
+        $staff = Staff::orderBy('name')->get();
 
         return view('pages.bpjs.index', compact('staff'));
     }
 
     public function data(Request $request)
     {
-        $query = Bpjs::with('dataInduk')->select('bpjs.*');
+        $query = Bpjs::with('staff')->select('bpjs.*');
 
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('nama_staff', function ($row) {
-                return $row->dataInduk->nama ?? $row->name ?? '-';
+                return $row->staff->name ?? $row->name ?? '-';
             })
             ->editColumn('noBpjs', fn($row) => $row->noBpjs ?? '-')
             ->editColumn('kjp_2p', fn($row) => $row->kjp_2p ?? '-')
@@ -39,7 +39,7 @@ class BpjsController extends Controller
     public function create()
     {
         // Kalau masih pakai halaman create terpisah
-        $staff = DataInduk::where('status_pegawai', '!=', 'Resign')->orderBy('nama')->get();
+        $staff = Staff::orderBy('name')->get();
         return view('bpjs.create', compact('staff'));
     }
 
@@ -58,7 +58,7 @@ class BpjsController extends Controller
 
         Bpjs::create([
             'staffId'    => $staff->staffId,
-            'name'       => $staff->name,
+            'name'       => $staff->name,                       
             'noBpjs'     => $request->noBpjs ?: 'Tidak ikut lembaga',
             'kjp_2p'     => $request->kjp_2p ?: 'Tidak ikut lembaga',
             'kjp_3p'     => $request->kjp_3p ?: 'Tidak ikut lembaga',
@@ -72,13 +72,13 @@ class BpjsController extends Controller
 
     public function show(Bpjs $bpjs)
     {
-        $bpjs->load('dataInduk');
+        $bpjs->load('staff');
         return view('bpjs.show', compact('bpjs'));
     }
 
     public function edit(Bpjs $bpjs)
     {
-        $staff = DataInduk::where('status_pegawai', '!=', 'Resign')->orderBy('nama')->get();
+        $staff = Staff::orderBy('name')->get();
         return view('bpjs.edit', compact('bpjs', 'staff'));
     }
 
@@ -98,7 +98,7 @@ class BpjsController extends Controller
 
         $bpjs->update([
             'staffId'    => $staff->staffId,
-            'name'       => $staff->name,
+            'name'       => $staff->name,                       
             'noBpjs'     => $request->noBpjs ?: 'Tidak ikut lembaga',
             'kjp_2p'     => $request->kjp_2p ?: 'Tidak ikut lembaga',
             'kjp_3p'     => $request->kjp_3p ?: 'Tidak ikut lembaga',

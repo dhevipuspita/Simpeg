@@ -96,8 +96,8 @@
                     <th>Nama Pegawai</th>
                     <th>Pendidikan</th>
                     <th>Instansi</th>
-                    <th>TMT Awal</th>
                     <th>Golongan</th>
+                    <th>TMT Awal</th>
                     <th>TMT Golongan</th>
                     <th>Riwayat Golongan</th>
                     <th>Riwayat Jabatan</th>
@@ -114,12 +114,16 @@
                     <td>{{ $r->dataInduk->nama ?? '-' }}</td>
                     <td>{{ $r->pendidikan ?? '-' }}</td>
                     <td>{{ $r->instansi ?? '-' }}</td>
-                    <td>{{ $r->tmt_awal ?? '-' }}</td>
                     @php $latestGol = $r->latestRiwayatGolongan; @endphp
                     <td>
                         {{ $latestGol?->jenisGolongan?->jenis 
                             ?? $r->jenisGolongan?->jenis 
                             ?? '-' }}
+                    </td>
+                    <td>
+                        {{ $r->dataInduk && $r->dataInduk->mulai_bertugas
+                            ? \Carbon\Carbon::parse($r->dataInduk->mulai_bertugas)->translatedFormat('d F Y')
+                            : '-' }}
                     </td>
                     <td>
                         @if ($latestGol?->tanggal)
@@ -148,9 +152,17 @@
                             @else
                                 <span class="badge bg-success">Aktif</span>
                             @endif
-                        </td>
-                    <td>{{ $r->keterangan ?? '-' }}</td>
-
+                    </td>
+                    <td>
+                        @if ($d->status_pegawai == 'resign')
+                            {{ $d->resign->alasan_resign ?? '-' }}
+                        @elseif ($d->status_pegawai == 'cuti')
+                            {{ optional($d->perizinan->last())->alasan ?? '-' }}
+                        @else
+                            {{-- Aktif --}}
+                            -
+                        @endif
+                    </td>
                     <td>
                         <div class="dropdown">
                             <button class="btn p-0 dropdown-toggle" data-bs-toggle="dropdown">
@@ -222,7 +234,7 @@
                                         {{-- TMT Awal --}}
                                         <div class="col-md-6 mb-3">
                                             <label>TMT Awal</label>
-                                            <input type="date" name="tmt_awal" class="form-control" value="{{ $r->tmt_awal }}">
+                                            <input type="date" name="tmt_awal" class="form-control" value="{{ $r->dataInduk->mulai_bertugas }}">
                                         </div>
 
                                         {{-- Golongan --}}

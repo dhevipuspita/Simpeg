@@ -25,8 +25,6 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-
-                            {{-- Tanggal Surat --}}
                             <div class="col-md-6 col-sm-12">
                                 <div class="mb-3">
                                     <label class="form-label">
@@ -40,8 +38,6 @@
                                            required>
                                 </div>
                             </div>
-
-                            {{-- Nama Pegawai (DataInduk) --}}
                             <div class="col-md-6 col-sm-12">
                                 <div class="mb-3">
                                     <label for="data_induk_id" class="form-label">
@@ -59,8 +55,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            {{-- Tanggal Mulai Cuti --}}
                             <div class="col-md-6 col-sm-12">
                                 <div class="mb-3">
                                     <label class="form-label">
@@ -74,8 +68,6 @@
                                            required>
                                 </div>
                             </div>
-
-                            {{-- Tanggal Akhir Cuti --}}
                             <div class="col-md-6 col-sm-12">
                                 <div class="mb-3">
                                     <label class="form-label">
@@ -89,8 +81,6 @@
                                            required>
                                 </div>
                             </div>
-
-                            {{-- Alasan Cuti --}}
                             <div class="col-md-12 col-sm-12">
                                 <div class="mb-3">
                                     <label class="form-label">
@@ -100,7 +90,6 @@
                                     <textarea name="alasan" cols="30" rows="4" class="form-control" required></textarea>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="modal-footer">

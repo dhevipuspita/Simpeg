@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\DataInduk;
 use Illuminate\Http\Request;
 use App\Imports\DataIndukImport;
+use App\Models\JenisGolongan;
+use App\Models\Jenjang;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DataIndukController extends Controller
 {
-    // Tampilkan semua data induk
-    public function index()
+   public function index()
     {
         $dataInduk = DataInduk::orderBy('id', 'asc')->get();
+        $jenis_golongan = JenisGolongan::orderBy('jenis')->get();
+        $jenjang = Jenjang::orderBy('nama_jenjang')->get();
 
-        return view('pages.system.data_induk', compact('dataInduk'));
+        return view('pages.system.data_induk', compact('dataInduk', 'jenis_golongan', 'jenjang'));
     }
 
     // Simpan data induk baru
