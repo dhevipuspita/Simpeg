@@ -22,6 +22,7 @@ class Staff extends Model
         "suami_istri",
         "alamat",
         "email",
+        "dataIndukId",
         "created_at",
         "updated_at",
     ];
@@ -34,5 +35,4 @@ class Staff extends Model
     {
         return $this->belongsTo(DataInduk::class, 'dataIndukId', 'id');
     }
-
 }

@@ -30,16 +30,16 @@ class ResignController extends Controller
             'dataInduk' => $dataInduk
         ]);
     }
-  // =========================
-  
-//  CREATE (REDIRECT KE INDEX)
-// =========================
-public function create(Request $request)
-{
-    return redirect()->route('resign.index', [
-        'data_induk_id' => $request->data_induk_id
-    ]);
-}
+    // =========================
+
+    //  CREATE (REDIRECT KE INDEX)
+    // =========================
+    public function create(Request $request)
+    {
+        return redirect()->route('resign.index', [
+            'data_induk_id' => $request->data_induk_id
+        ]);
+    }
     // =========================
     //  STORE (TAMBAH RESIGN)
     // =========================
@@ -80,19 +80,11 @@ public function create(Request $request)
                 $dataInduk->update([
                     'status_pegawai' => 'resign'
                 ]);
-
-                // Update staff jika ada relasi staff
-                if ($dataInduk->staff) {
-                    $dataInduk->staff->update([
-                        'statusPegawai' => 'resign'
-                    ]);
-                }
             }
 
             return redirect()
                 ->route('resign.index')
                 ->with('success', 'Data resign berhasil ditambahkan.');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -130,13 +122,12 @@ public function create(Request $request)
             $resign->update($validated);
 
             return back()->with('success', 'Data resign berhasil diubah.');
-
         } catch (\Exception $e) {
             return back()->with('error', 'Data resign gagal diubah.');
         }
     }
 
-    
+
 
     // =========================
     //  DELETE RESIGN
@@ -158,7 +149,6 @@ public function create(Request $request)
                 'status' => 'success',
                 'message' => 'Data resign berhasil dihapus.'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
