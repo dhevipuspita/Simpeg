@@ -135,12 +135,10 @@
                                                 @endforeach
                                             </select>
                                         </div>
-
                                         <div class="col-md-6 mb-3">
                                             <label>Jabatan</label>
                                             <input type="text" name="jabatan" class="form-control" value="{{ $d->jabatan }}">
                                         </div>
-
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Golongan</label>
                                             <select name="gol" class="form-select">
@@ -153,7 +151,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-
                                         <div class="col-md-6 mb-3">
                                             <label>Status Kepegawaian</label>
                                             <select name="status" class="form-select">
@@ -163,14 +160,11 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="modal-footer">
                                     <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                                     <button class="btn btn-primary">Simpan</button>
                                 </div>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
